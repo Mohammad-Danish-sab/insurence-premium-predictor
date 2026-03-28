@@ -10,5 +10,11 @@ async def connect_db():
     db = client[settings.DB_NAME]
     print("✅ MongoDB connected")
 
+async def disconnect_db():
+    global client
+    if client:
+        client.close()
+        print("❌ MongoDB Disconnected")
+
 def get_db():
     return db

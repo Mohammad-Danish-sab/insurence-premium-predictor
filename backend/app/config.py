@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    APP_NAME: str = "Insurance Premium Prediction"
+    DEBUG: bool = False
+
     class Config:
         env_file = ".env"
 
