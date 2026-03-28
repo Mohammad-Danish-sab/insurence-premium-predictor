@@ -11,10 +11,36 @@ class InsuranceInput(BaseModel):
     region: str = Field(..., pattern="^(northeast|northwest|southeast|southwest)$")
     insurance_type: str = Field(default="health")  # health, auto, life
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "age": 35,
+                "sex": "male",
+                "bmi": 28.5,
+                "children": 2,
+                "smoker": False,
+                "region": "northeast",
+                "insurance_type": "health"
+            }
+        }
+
+    class FactorDetail(BaseModel):
+        factor:    str
+        impact:    str   # e.g. "+₹2000"
+        direction: str   # "increases" or "decreases"
+
 class PredictionResponse(BaseModel):
     predicted_premium: float
-    risk_score: int                    # 0-100
+    risk_score: int  
+    risk_level: str                  # 0-100
     confidence_range: dict             # {"min": X, "max": Y}
     top_factors: list                  # SHAP-based factors
     recommendation: str
-    timestamp: datetime = datetime.now()
+    plan_comparison: dict
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class PredictionInDB(BaseModel):
+    user_id:    str
+    input:      dict
+    result:     dict
+    created_at: datetime = Field(default_factory=datetime.utcnow)   
