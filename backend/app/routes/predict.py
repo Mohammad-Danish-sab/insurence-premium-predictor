@@ -1,31 +1,83 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from app.models.prediction import InsuranceInput, PredictionResponse
 from app.services.prediction_service import run_prediction
+from app.services.report_service import generate_pdf_report
+from app.services.auth_service import get_user_by_id
 from app.middleware.auth_middleware import get_current_user
+from app.middleware.rate_limiter import limiter
+from fastapi import Request
+import io
 
 router = APIRouter()
 
-@router.post("/", response_model=PredictionResponse)
+@router.post("/")
+@limiter.limit("10/minute")
 async def predict_premium(
+    request: Request,
     data: InsuranceInput,
     current_user: dict = Depends(get_current_user)
 ):
     try:
-        result = await run_prediction(data, current_user["id"])
+        result = await run_prediction(data, user_id=current_user["id"])
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/guest")  # No auth needed for demo
-async def predict_guest(data: InsuranceInput):
-    result = await run_prediction(data, user_id=None)
-    return result
+@router.post("/guest")
+@limiter.limit("5/minute")
+async def predict_guest(
+    request: Request,
+    data: InsuranceInput
+):
+    try:
+        result = await run_prediction(data, user_id=None)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/what-if")
+@router.post("/what-if")
+@limiter.limit("10/minute")
 async def what_if_simulator(
-    base_bmi: float, target_bmi: float,
-    smoker: bool, age: int,
+     request: Request,
+    current: InsuranceInput,
     current_user: dict = Depends(get_current_user)
 ):
-    # Compare premium under different scenarios
-    ...
+    try:
+        # Current scenario
+        current_result = await run_prediction(current, user_id=None)
+
+        # Scenario: if not smoker
+        non_smoker          = current.model_copy(update={"smoker": False})
+        non_smoker_result   = await run_prediction(non_smoker, user_id=None)
+
+        # Scenario: if BMI is normal
+        normal_bmi          = current.model_copy(update={"bmi": 24.0})
+        normal_bmi_result   = await run_prediction(normal_bmi, user_id=None)
+
+        return {
+            "current_scenario": {
+                "label":   "Your Current Profile",
+                "premium": current_result["predicted_premium"],
+                "risk":    current_result["risk_level"]
+            },
+            "if_non_smoker": {
+                "label":   "If You Quit Smoking",
+                "premium": non_smoker_result["predicted_premium"],
+                "savings": round(
+                    current_result["predicted_premium"] - non_smoker_result["predicted_premium"], 2
+                ),
+                "risk":    non_smoker_result["risk_level"]
+            },
+            "if_normal_bmi": {
+                "label":   "If BMI Were Normal (24)",
+                "premium": normal_bmi_result["predicted_premium"],
+                "savings": round(
+                    current_result["predicted_premium"] - normal_bmi_result["predicted_premium"], 2
+                ),
+                "risk":    normal_bmi_result["risk_level"]
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
