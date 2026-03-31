@@ -81,3 +81,40 @@ async def what_if_simulator(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+
+# ── DOWNLOAD PDF REPORT ──────────────────────
+@router.get("/report/{prediction_id}")
+async def download_report(
+    prediction_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    from app.database import get_db
+    from bson import ObjectId
+
+    db = get_db()
+
+    # Fetch prediction
+    prediction = await db.predictions.find_one({
+        "_id":     ObjectId(prediction_id),
+        "user_id": current_user["id"]
+    })
+    if not prediction:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+
+    # Fetch user
+    user = await get_user_by_id(current_user["id"])
+
+    # Generate PDF
+    pdf_bytes = generate_pdf_report(
+        user=user,
+        input_data=prediction["input"],
+        result=prediction["result"]
+    )
+
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=insurance_report_{prediction_id}.pdf"
+        }
+    )
