@@ -32,3 +32,19 @@ async def get_history(
         "pages":       (total + limit - 1) // limit
     }
 
+@router.get("/{prediction_id}")
+async def get_prediction(
+    prediction_id: str,
+    current_user:  dict = Depends(get_current_user)
+):
+    db = get_db()
+
+    doc = await db.predictions.find_one({
+        "_id":     ObjectId(prediction_id),
+        "user_id": current_user["id"]
+    })
+    if not doc:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+
+    doc["_id"] = str(doc["_id"])
+    return doc
