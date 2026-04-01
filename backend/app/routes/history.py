@@ -65,3 +65,31 @@ async def delete_prediction(
 
     return {"message": "Prediction deleted "}
 
+
+@router.get("/stats/summary")
+async def get_stats(current_user: dict = Depends(get_current_user)):
+    db = get_db()
+
+    pipeline = [
+        {"$match": {"user_id": current_user["id"]}},
+        {"$group": {
+            "_id":         None,
+            "total":       {"$sum": 1},
+            "avg_premium": {"$avg": "$result.predicted_premium"},
+            "max_premium": {"$max": "$result.predicted_premium"},
+            "min_premium": {"$min": "$result.predicted_premium"},
+            "avg_risk":    {"$avg": "$result.risk_score"}
+        }}
+    ]
+
+    result = await db.predictions.aggregate(pipeline).to_list(1)
+
+    if not result:
+        return {
+            "total": 0, "avg_premium": 0,
+            "max_premium": 0, "min_premium": 0, "avg_risk": 0
+        }
+
+    stats = result[0]
+    stats.pop("_id", None)
+    return {k: round(v, 2) if isinstance(v, float) else v for k, v in stats.items()}
