@@ -48,3 +48,20 @@ async def get_prediction(
 
     doc["_id"] = str(doc["_id"])
     return doc
+
+@router.delete("/{prediction_id}")
+async def delete_prediction(
+    prediction_id: str,
+    current_user:  dict = Depends(get_current_user)
+):
+    db     = get_db()
+    result = await db.predictions.delete_one({
+        "_id":     ObjectId(prediction_id),
+        "user_id": current_user["id"]
+    })
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+
+    return {"message": "Prediction deleted "}
+
