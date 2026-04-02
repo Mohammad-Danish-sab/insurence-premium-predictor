@@ -46,3 +46,27 @@ async def get_all_predictions(
 
     total = await db.predictions.count_documents({})
     return {"predictions": predictions, "total": total, "page": page}
+
+@router.get("/stats")
+async def admin_stats(_: dict = Depends(require_admin)):
+    db = get_db()
+
+    total_users       = await db.users.count_documents({})
+    total_predictions = await db.predictions.count_documents({})
+
+    pipeline = [
+        {"$group": {
+            "_id":         None,
+            "avg_premium": {"$avg": "$result.predicted_premium"},
+            "avg_risk":    {"$avg": "$result.risk_score"},
+        }}
+    ]
+    agg = await db.predictions.aggregate(pipeline).to_list(1)
+    agg = agg[0] if agg else {}
+
+    return {
+        "total_users":       total_users,
+        "total_predictions": total_predictions,
+        "avg_premium":       round(agg.get("avg_premium", 0), 2),
+        "avg_risk_score":    round(agg.get("avg_risk", 0), 2),
+    }
