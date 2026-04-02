@@ -70,3 +70,19 @@ async def admin_stats(_: dict = Depends(require_admin)):
         "avg_premium":       round(agg.get("avg_premium", 0), 2),
         "avg_risk_score":    round(agg.get("avg_risk", 0), 2),
     }
+
+@router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: str,
+    _: dict = Depends(require_admin)
+):
+    db     = get_db()
+    result = await db.users.delete_one({"_id": ObjectId(user_id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # also delete their predictions
+    await db.predictions.delete_many({"user_id": user_id})
+
+    return {"message": "User and their predictions deleted "}
