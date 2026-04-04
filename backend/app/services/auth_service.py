@@ -115,3 +115,20 @@ async def get_user_by_id(user_id: str) -> dict | None:
         return None
 
     return _format_user(user)
+
+async def update_profile(user_id: str, data: UserUpdateProfile) -> dict:
+    db = get_db()
+
+    # Only update fields that were actually sent
+    update_fields = {
+        k: v for k, v in data.dict().items() if v is not None
+    }
+    update_fields["updated_at"] = datetime.utcnow()
+
+    await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": update_fields}
+    )
+
+    updated_user = await db.users.find_one({"_id": ObjectId(user_id)})
+    return _format_user(updated_user)
