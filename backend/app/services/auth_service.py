@@ -132,3 +132,25 @@ async def update_profile(user_id: str, data: UserUpdateProfile) -> dict:
 
     updated_user = await db.users.find_one({"_id": ObjectId(user_id)})
     return _format_user(updated_user)
+
+
+async def change_password(user_id: str, data: ChangePassword) -> None:
+    db = get_db()
+
+    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise ValueError("User not found")
+
+    # Verify old password
+    if not verify_password(data.old_password, user["hashed_password"]):
+        raise ValueError("Old password is incorrect")
+
+    # Hash and save new password
+    await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {
+            "hashed_password": hash_password(data.new_password),
+            "updated_at":      datetime.utcnow()
+        }}
+    )
+
