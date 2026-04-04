@@ -66,3 +66,43 @@ async def create_user(user: UserSignup) -> dict:
             "role":      user.role,
         }
     }
+
+
+
+async def login_user(user: UserLogin) -> dict | None:
+    db = get_db()
+
+    db_user = await db.users.find_one({"email": user.email})
+    if not db_user:
+        return None
+
+    if not verify_password(user.password, db_user["hashed_password"]):
+        return None
+
+    # Check if account is active
+    if not db_user.get("is_active", True):
+        raise ValueError("Account is deactivated. Contact support.")
+
+    # Update last login
+    await db.users.update_one(
+        {"email": user.email},
+        {"$set": {"last_login": datetime.utcnow()}}
+    )
+
+    user_id = str(db_user["_id"])
+    token   = create_access_token({"sub": user_id, "role": db_user["role"]})
+
+    return {
+        "message":      "Login successful ✅",
+        "access_token": token,
+        "token_type":   "bearer",
+        "expires_in":   settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        "user": {
+            "id":        user_id,
+            "full_name": db_user["full_name"],
+            "email":     db_user["email"],
+            "phone":     db_user.get("phone"),
+            "role":      db_user["role"],
+            "avatar_url": db_user.get("avatar_url"),
+        }
+    }
