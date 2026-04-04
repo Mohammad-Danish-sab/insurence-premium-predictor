@@ -106,3 +106,12 @@ async def login_user(user: UserLogin) -> dict | None:
             "avatar_url": db_user.get("avatar_url"),
         }
     }
+
+async def get_user_by_id(user_id: str) -> dict | None:
+    db = get_db()
+
+    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return None
+
+    return _format_user(user)
