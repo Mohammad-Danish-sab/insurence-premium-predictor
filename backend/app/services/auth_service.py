@@ -23,3 +23,9 @@ def create_access_token(data: dict) -> str:
     )
     payload.update({"exp": expire})
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+def _format_user(user: dict) -> dict:
+    user["id"]  = str(user["_id"])
+    user.pop("_id",             None)
+    user.pop("hashed_password", None)
+    return user
