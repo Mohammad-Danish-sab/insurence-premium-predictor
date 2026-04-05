@@ -85,3 +85,30 @@ async def require_agent(
             detail="Agent or Admin access required"
         )
     return current_user
+
+
+# optional auth
+async def get_optional_user(
+    token: str = Depends(OAuth2PasswordBearer(
+        tokenUrl="/api/auth/login",
+        auto_error=False          # ← don't raise error if no token
+    ))
+) -> dict | None:
+    if not token:
+        return None
+
+    try:
+        token_data = decode_token(token)
+        db   = get_db()
+        user = await db.users.find_one({"_id": ObjectId(token_data["id"])})
+        if not user:
+            return None
+
+        return {
+            "id":        str(user["_id"]),
+            "email":     user["email"],
+            "full_name": user["full_name"],
+            "role":      user["role"],
+        }
+    except Exception:
+        return None

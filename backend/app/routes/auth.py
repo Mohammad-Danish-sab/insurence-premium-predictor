@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.models.user import UserSignup, UserLogin
 from app.services.auth_service import create_user, login_user
 from app.middleware.auth_middleware import get_current_user
