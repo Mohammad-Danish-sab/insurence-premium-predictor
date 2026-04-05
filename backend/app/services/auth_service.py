@@ -5,6 +5,7 @@ from bson import ObjectId
 from app.models.user import UserSignup, UserLogin, UserUpdateProfile, ChangePassword, UserInDB
 from app.database import get_db
 from app.config import settings
+from fastapi import Depends
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -29,9 +30,7 @@ def _format_user(user: dict) -> dict:
     user.pop("_id",             None)
     user.pop("hashed_password", None)
     return user
-
-async def create_user(user: UserSignup) -> dict:
-    db = get_db()
+async def create_user(user: UserSignup, db=Depends(get_db)):
 
     # Check duplicate email
     existing = await db.users.find_one({"email": user.email})
@@ -154,3 +153,16 @@ async def change_password(user_id: str, data: ChangePassword) -> None:
         }}
     )
 
+async def get_all_users(skip: int = 0, limit: int = 20) -> list:
+    db     = get_db()
+    cursor = db.users.find(
+        {}, {"hashed_password": 0}
+    ).skip(skip).limit(limit)
+
+    users = []
+    async for user in cursor:
+        user["id"] = str(user["_id"])
+        user.pop("_id", None)
+        users.append(user)
+
+    return users
