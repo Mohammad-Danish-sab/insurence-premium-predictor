@@ -1,6 +1,24 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.models.user import UserSignup, UserLogin
 from app.services.auth_service import create_user, login_user
+
+
+
+from app.models.user import (
+    UserSignup,
+    UserLogin,
+    UserUpdateProfile,
+    ChangePassword
+)
+
+from app.services.auth_service import (
+    create_user,
+    login_user,
+    get_user_by_id,
+    update_profile,
+    change_password
+)
+
 from app.middleware.auth_middleware import get_current_user
 
 router = APIRouter()
@@ -16,9 +34,9 @@ async def signup(user: UserSignup):
 @router.post("/login")
 async def login(user: UserLogin):
     result = await login_user(user)
-    if not token:
+    if not result:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"access_token": token, "token_type": "bearer"}
+    return result
 
 @router.get("/me")
 async def get_profile(current_user: dict = Depends(get_current_user)):
@@ -32,8 +50,8 @@ async def update_my_profile(
     data: UserUpdateProfile,
     current_user: dict = Depends(get_current_user)
 ):
-    updated = await update_profile(current_user["id"], data)
-    return {"message": "Profile updated ✅", "user": updated}
+    updated = await update_profile(current_user["sub"], data)
+    return {"message": "Profile updated ", "user": updated}
 
 @router.put("/change-password")
 async def change_my_password(
@@ -41,7 +59,7 @@ async def change_my_password(
     current_user: dict = Depends(get_current_user)
 ):
     try:
-        await change_password(current_user["id"], data)
-        return {"message": "Password changed successfully ✅"}
+        await change_password(current_user["sub"], data)
+        return {"message": "Password changed successfully "}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
