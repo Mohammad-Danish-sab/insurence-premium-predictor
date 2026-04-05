@@ -75,3 +75,13 @@ async def require_admin(
     return current_user
 
 
+# require agent and admin
+async def require_agent(
+    current_user: dict = Depends(get_current_user)
+) -> dict:
+    if current_user["role"] not in ["agent", "admin"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Agent or Admin access required"
+        )
+    return current_user
