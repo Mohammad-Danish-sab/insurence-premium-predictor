@@ -62,3 +62,16 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
         "phone":     user.get("phone"),
         "avatar_url": user.get("avatar_url")
     }
+
+# require admin
+async def require_admin(
+    current_user: dict = Depends(get_current_user)
+) -> dict:
+    if current_user["role"] != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user
+
+
