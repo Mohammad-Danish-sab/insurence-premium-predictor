@@ -12,3 +12,7 @@ export const getProfile = async () => {
   const res = await api.get("/api/auth/me");
   return res.data;
 };
+export const updateProfile = async (data) => {
+  const res = await api.put("/api/auth/me", data);
+  return res.data;
+};
