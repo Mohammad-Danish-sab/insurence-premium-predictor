@@ -19,3 +19,8 @@ export const getHistory = async (page = 1) => {
   const res = await api.get(`/api/history/?page=${page}`);
   return res.data;
 };
+
+export const getStats = async () => {
+  const res = await api.get("/api/history/stats/summary");
+  return res.data;
+};
