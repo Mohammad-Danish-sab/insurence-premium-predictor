@@ -24,3 +24,8 @@ export const getStats = async () => {
   const res = await api.get("/api/history/stats/summary");
   return res.data;
 };
+
+export const deletePrediction = async (id) => {
+  const res = await api.delete(`/api/history/${id}`);
+  return res.data;
+};
