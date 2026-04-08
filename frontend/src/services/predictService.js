@@ -14,3 +14,8 @@ export const whatIfSimulator = async (data) => {
   const res = await api.post("/api/predict/what-if", data);
   return res.data;
 };
+
+export const getHistory = async (page = 1) => {
+  const res = await api.get(`/api/history/?page=${page}`);
+  return res.data;
+};
