@@ -29,3 +29,11 @@ export const deletePrediction = async (id) => {
   const res = await api.delete(`/api/history/${id}`);
   return res.data;
 };
+
+export const downloadReport = (id) => {
+  const token = localStorage.getItem("token");
+  window.open(
+    `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/predict/report/${id}?token=${token}`,
+    "_blank",
+  );
+};
