@@ -29,3 +29,21 @@ export const validateLogin = (data) => {
 };
 
 
+export const validatePredictForm = (data) => {
+  const errors = {};
+
+  if (!data.age || data.age < 18 || data.age > 100)
+    errors.age = "Age must be between 18 and 100";
+
+  if (!data.bmi || data.bmi < 10 || data.bmi > 60)
+    errors.bmi = "BMI must be between 10 and 60";
+
+  if (data.children < 0 || data.children > 10)
+    errors.children = "Children must be between 0 and 10";
+
+  if (!data.sex) errors.sex = "Please select gender";
+
+  if (!data.region) errors.region = "Please select region";
+
+  return errors;
+};
