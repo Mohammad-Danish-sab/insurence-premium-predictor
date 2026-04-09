@@ -15,3 +15,17 @@ export const validateSignup = (data) => {
 
   return errors;
 };
+
+
+export const validateLogin = (data) => {
+  const errors = {};
+
+  if (!data.email || !/\S+@\S+\.\S+/.test(data.email))
+    errors.email = "Enter a valid email address";
+
+  if (!data.password) errors.password = "Password is required";
+
+  return errors;
+};
+
+
