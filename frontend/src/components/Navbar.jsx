@@ -24,5 +24,8 @@ export default function Navbar() {
     logout()
     navigate("/login")
   }
-
+   const isActive = (path) =>
+     location.pathname === path
+       ? "text-secondary font-semibold border-b-2 border-secondary"
+       : "text-gray-600 hover:text-secondary transition";
 }
