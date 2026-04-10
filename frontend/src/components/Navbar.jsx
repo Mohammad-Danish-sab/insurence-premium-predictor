@@ -83,10 +83,72 @@ export default function Navbar() {
                   </span>
                 </button>
 
+                 {dropOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl
+                                  shadow-lg border border-gray-100 py-1 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-800">{user.full_name}</p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    </div>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setDropOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm
+                                 text-gray-700 hover:bg-gray-50"
+                    >
+                      <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    </Link>
+                    <Link
+                      to="/history"
+                      onClick={() => setDropOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm
+                                 text-gray-700 hover:bg-gray-50"
+                    >
+                      <History className="w-4 h-4" /> History
+                    </Link>
+                    {user.role === "admin" && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setDropOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm
+                                   text-gray-700 hover:bg-gray-50"
+                      >
+                        <ShieldCheck className="w-4 h-4" /> Admin Panel
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 px-4 py-2 text-sm
+                                 text-danger hover:bg-red-50 w-full text-left"
+                    >
+                      <LogOut className="w-4 h-4" /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-sm font-medium text-gray-600 hover:text-secondary transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-secondary text-white text-sm font-medium
+                             px-5 py-2 rounded-full hover:bg-primary transition"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+
+
             </div>
             ):
             </div>
-          </div>
-        </nav>
-      );
+         </nav>
+      )      
   }
