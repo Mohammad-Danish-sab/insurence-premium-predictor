@@ -33,7 +33,6 @@ export default function Navbar() {
         <nav className="bg-white shadow-sm sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-
               <Link to="/" className="flex items-center gap-2">
                 <Shield className="text-secondary w-7 h-7" />
                 <span className="text-xl font-bold text-primary">
@@ -41,7 +40,31 @@ export default function Navbar() {
                 </span>
               </Link>
 
+              <div className="hidden md:flex items-center gap-8">
+                <Link to="/" className={isActive("/")}>
+                  Home
+                </Link>
+                {user && (
+                  <>
+                    <Link to="/dashboard" className={isActive("/dashboard")}>
+                      Dashboard
+                    </Link>
+                    <Link to="/predict" className={isActive("/predict")}>
+                      Get Quote
+                    </Link>
+                    <Link to="/history" className={isActive("/history")}>
+                      History
+                    </Link>
+                    {user.role === "admin" && (
+                      <Link to="/admin" className={isActive("/admin")}>
+                        Admin
+                      </Link>
+                    )}
+                  </>
+                )}
+              </div>
 
+              
             </div>
           </div>
         </nav>
