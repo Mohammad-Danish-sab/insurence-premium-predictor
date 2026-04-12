@@ -60,7 +60,7 @@ export default function Footer() {
             </ul>
           </div>
 
-           <div>
+          <div>
             <h4 className="font-semibold text-white mb-4">Insurance Types</h4>
             <ul className="flex flex-col gap-2 text-sm text-gray-300">
               <li>🏥 Health Insurance</li>
@@ -70,7 +70,17 @@ export default function Footer() {
             </ul>
           </div>
 
-
+          <div
+            className="border-t border-blue-800 mt-10 pt-6 flex flex-col
+                        md:flex-row justify-between items-center gap-4"
+          >
+            <p className="text-sm text-gray-400">
+              © {new Date().getFullYear()} InsurePredict. All rights reserved.
+            </p>
+            <p className="text-xs text-gray-500">
+              This tool is for estimation purposes only. Not financial advice.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
