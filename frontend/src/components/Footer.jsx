@@ -60,7 +60,17 @@ export default function Footer() {
             </ul>
           </div>
 
-          
+           <div>
+            <h4 className="font-semibold text-white mb-4">Insurance Types</h4>
+            <ul className="flex flex-col gap-2 text-sm text-gray-300">
+              <li>🏥 Health Insurance</li>
+              <li>🚗 Auto Insurance</li>
+              <li>🏠 Home Insurance</li>
+              <li>💼 Life Insurance</li>
+            </ul>
+          </div>
+
+
         </div>
       </div>
     </footer>
