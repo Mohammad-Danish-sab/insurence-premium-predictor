@@ -33,3 +33,26 @@ const features = [
     desc: "Compare Basic, Standard, and Premium plans side by side to find the best fit.",
   },
 ];
+
+const steps = [
+  {
+    step: "01",
+    title: "Create Account",
+    desc: "Sign up for free in under a minute.",
+  },
+  {
+    step: "02",
+    title: "Enter Details",
+    desc: "Fill in your age, BMI, lifestyle details.",
+  },
+  {
+    step: "03",
+    title: "Get Your Quote",
+    desc: "Receive instant premium with risk analysis.",
+  },
+  {
+    step: "04",
+    title: "Download Report",
+    desc: "Save your PDF report and compare plans.",
+  },
+];
