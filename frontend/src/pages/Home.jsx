@@ -64,3 +64,26 @@ const stats = [
   { value: "Free", label: "Always" },
 ];
 
+const testimonials = [
+  {
+    name: "Priya Sharma",
+    role: "Software Engineer",
+    review:
+      "InsurePredict helped me understand why my premium was high. I quit smoking and saved ₹8,000/year!",
+    stars: 5,
+  },
+  {
+    name: "Rahul Verma",
+    role: "Business Owner",
+    review:
+      "The plan comparison feature is amazing. I found the perfect policy for my family in minutes.",
+    stars: 5,
+  },
+  {
+    name: "Anjali Singh",
+    role: "Doctor",
+    review:
+      "Very professional PDF report. I shared it directly with my insurance agent.",
+    stars: 4,
+  },
+];
