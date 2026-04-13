@@ -56,3 +56,11 @@ const steps = [
     desc: "Save your PDF report and compare plans.",
   },
 ];
+
+const stats = [
+  { value: "10,000+", label: "Quotes Generated" },
+  { value: "4 Types", label: "Insurance Coverage" },
+  { value: "99.9%", label: "Uptime" },
+  { value: "Free", label: "Always" },
+];
+
