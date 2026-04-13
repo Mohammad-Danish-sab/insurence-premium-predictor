@@ -10,3 +10,26 @@ import {
   ArrowRight,
   Star,
 } from "lucide-react";
+
+const features = [
+  {
+    icon: <Zap className="w-6 h-6 text-secondary" />,
+    title: "Instant Prediction",
+    desc: "Get your insurance premium calculated in seconds using smart rule-based engine.",
+  },
+  {
+    icon: <BarChart2 className="w-6 h-6 text-secondary" />,
+    title: "Risk Analysis",
+    desc: "Understand your personal risk score and what factors are driving your premium.",
+  },
+  {
+    icon: <FileText className="w-6 h-6 text-secondary" />,
+    title: "PDF Report",
+    desc: "Download a professional insurance report with full breakdown and recommendations.",
+  },
+  {
+    icon: <Shield className="w-6 h-6 text-secondary" />,
+    title: "Plan Comparison",
+    desc: "Compare Basic, Standard, and Premium plans side by side to find the best fit.",
+  },
+];
