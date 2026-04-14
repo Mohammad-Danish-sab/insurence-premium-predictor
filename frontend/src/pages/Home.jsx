@@ -93,12 +93,15 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      {/* ── HERO ───────────────────────────── */}
-      <section className="bg-gradient-to-br from-primary via-blue-800 to-secondary
-                          text-white py-24 px-4">
+      <section
+        className="bg-gradient-to-br from-primary via-blue-800 to-secondary
+                          text-white py-24 px-4"
+      >
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5
-                          rounded-full text-sm mb-6 backdrop-blur">
+          <div
+            className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5
+                          rounded-full text-sm mb-6 backdrop-blur"
+          >
             <Shield className="w-4 h-4" />
             Smart Insurance Premium Calculator
           </div>
@@ -109,8 +112,9 @@ export default function Home() {
           </h1>
 
           <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-10">
-            Get accurate premium predictions for Health, Life, Auto & Home insurance.
-            Understand your risk score, compare plans, and download professional reports.
+            Get accurate premium predictions for Health, Life, Auto & Home
+            insurance. Understand your risk score, compare plans, and download
+            professional reports.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -132,3 +136,22 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section className="bg-white py-12 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((s, i) => (
+              <div key={i}>
+                <p className="text-3xl font-bold text-primary">{s.value}</p>
+                <p className="text-sm text-gray-500 mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      
+    </div>
+  );
+}
+
