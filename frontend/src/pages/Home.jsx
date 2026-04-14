@@ -87,3 +87,48 @@ const testimonials = [
     stars: 4,
   },
 ];
+
+export default function Home() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+
+      {/* ── HERO ───────────────────────────── */}
+      <section className="bg-gradient-to-br from-primary via-blue-800 to-secondary
+                          text-white py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5
+                          rounded-full text-sm mb-6 backdrop-blur">
+            <Shield className="w-4 h-4" />
+            Smart Insurance Premium Calculator
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            Know Your Insurance
+            <span className="text-accent block">Premium Instantly</span>
+          </h1>
+
+          <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-10">
+            Get accurate premium predictions for Health, Life, Auto & Home insurance.
+            Understand your risk score, compare plans, and download professional reports.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/signup"
+              className="bg-accent hover:bg-orange-500 text-white font-semibold
+                         px-8 py-3 rounded-full transition flex items-center
+                         justify-center gap-2"
+            >
+              Get Free Quote <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/predict"
+              className="bg-white/10 hover:bg-white/20 text-white font-semibold
+                         px-8 py-3 rounded-full transition backdrop-blur"
+            >
+              Try as Guest
+            </Link>
+          </div>
+        </div>
+      </section>
