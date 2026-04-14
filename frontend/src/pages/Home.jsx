@@ -150,6 +150,40 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-bold text-primary">
+              Everything You Need
+            </h2>
+            <p className="text-gray-500 mt-3">
+              Powerful features to help you make smarter insurance decisions
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100
+                           hover:shadow-md hover:-translate-y-1 transition"
+              >
+                <div
+                  className="w-12 h-12 bg-blue-50 rounded-xl flex items-center
+                                justify-center mb-4"
+                >
+                  {f.icon}
+                </div>
+                <h3 className="font-semibold text-primary mb-2">{f.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       
     </div>
   );
