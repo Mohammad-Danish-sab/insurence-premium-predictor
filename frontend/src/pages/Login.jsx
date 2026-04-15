@@ -21,5 +21,21 @@ export default function Login() {
     setErrors({ ...errors, [e.target.name]: "" })
     setApiError("")
   }
+ const handleSubmit = async (e) => {
+    e.preventDefault()
+    const errs = validateLogin(form)
+    if (Object.keys(errs).length) return setErrors(errs)
+
+    setLoading(true)
+    try {
+      const res = await loginService(form)
+      login(res.access_token, res.user)
+      navigate("/dashboard")
+    } catch (err) {
+      setApiError(err.response?.data?.detail || "Login failed. Try again.")
+    } finally {
+      setLoading(false)
+    }
+}
 
 }
