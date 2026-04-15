@@ -94,7 +94,7 @@ export default function Home() {
       <Navbar />
 
       <section
-        className="bg-gradient-to-br from-primary via-blue-800 to-secondary
+        className="bg-linear-to-br from-primary via-blue-800 to-secondary
                           text-white py-24 px-4"
       >
         <div className="max-w-4xl mx-auto text-center">
@@ -284,7 +284,23 @@ export default function Home() {
         </div>
       </section>
 
-      
+      <section className="bg-linear-to-r from-primary to-secondary py-16 px-4">
+        <div className="max-w-3xl mx-auto text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Ready to Get Your Quote?</h2>
+          <p className="text-blue-100 mb-8">
+            Join thousands of users who made smarter insurance decisions.
+          </p>
+          <Link
+            to="/signup"
+            className="bg-accent hover:bg-orange-500 text-white font-semibold
+                       px-10 py-3 rounded-full transition inline-flex items-center gap-2"
+          >
+            Start Free <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }
