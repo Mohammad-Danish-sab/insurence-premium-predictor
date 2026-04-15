@@ -217,7 +217,43 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-bold text-primary">Insurance Types</h2>
+            <p className="text-gray-500 mt-3">
+              We support all major insurance categories
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              {
+                emoji: "🏥",
+                type: "Health",
+                desc: "Medical & hospitalization",
+              },
+              { emoji: "🚗", type: "Auto", desc: "Vehicle & motor coverage" },
+              { emoji: "🏠", type: "Home", desc: "Property & home coverage" },
+              { emoji: "💼", type: "Life", desc: "Life & term coverage" },
+            ].map((t, i) => (
+              <div
+                key={i}
+                className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100
+                           text-center hover:border-secondary hover:shadow-md transition"
+              >
+                <div className="text-4xl mb-3">{t.emoji}</div>
+                <h3 className="font-semibold text-primary">{t.type}</h3>
+                <p className="text-xs text-gray-500 mt-1">{t.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       
+
+    
     </div>
   );
 }
