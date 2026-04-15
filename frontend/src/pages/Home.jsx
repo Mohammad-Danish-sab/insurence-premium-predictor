@@ -184,6 +184,39 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl font-bold text-primary">How It Works</h2>
+            <p className="text-gray-500 mt-3">
+              Get your quote in 4 simple steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((s, i) => (
+              <div key={i} className="relative text-center">
+                <div
+                  className="w-14 h-14 bg-secondary text-white rounded-full
+                                flex items-center justify-center text-xl font-bold
+                                mx-auto mb-4"
+                >
+                  {s.step}
+                </div>
+                {i < steps.length - 1 && (
+                  <div
+                    className="hidden lg:block absolute top-7 left-[60%]
+                                  w-full h-0.5 bg-gray-200"
+                  />
+                )}
+                <h3 className="font-semibold text-primary mb-2">{s.title}</h3>
+                <p className="text-sm text-gray-500">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       
     </div>
   );
