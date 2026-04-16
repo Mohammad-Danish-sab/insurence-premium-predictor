@@ -52,7 +52,21 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-gray-800 mt-6">Welcome back</h1>
           <p className="text-gray-500 text-sm mt-1">Login to your account</p>
         </div>
+
+           {/* ── FORM ─────────────────────────── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 text-red-600
+                            text-sm rounded-xl px-4 py-3 mb-6">
+              {apiError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5"></form>
       </div>
     </div>
  )
-}
+</div>
+ )
+} 
