@@ -114,6 +114,21 @@ export default function Login() {
              )}
            </div>
 
+           <button
+             type="submit"
+             disabled={loading}
+             className="w-full bg-secondary hover:bg-primary text-white font-semibold
+                         py-3 rounded-xl transition flex items-center justify-center gap-2
+                         disabled:opacity-60"
+           >
+             {loading ? (
+               <>
+                 <Loader className="w-4 h-4 animate-spin" /> Logging in...
+               </>
+             ) : (
+               "Login"
+             )}
+           </button>
          </form>
        </div>
      </div>
