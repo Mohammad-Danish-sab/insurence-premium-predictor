@@ -34,3 +34,30 @@ const handleSubmit = async (e) => {
     "Risk score analysis",
     "Plan comparison",
   ];
+
+ return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-2">
+            <Shield className="w-8 h-8 text-secondary" />
+            <span className="text-2xl font-bold text-primary">
+              Insure<span className="text-secondary">Predict</span>
+            </span>
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-800 mt-6">Create your account</h1>
+          <p className="text-gray-500 text-sm mt-1">Free forever. No credit card needed.</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 mb-6">
+          {perks.map((p, i) => (
+            <div key={i} className="flex items-center gap-2 text-xs text-gray-600">
+              <CheckCircle className="w-3.5 h-3.5 text-success shrink-0" />
+              {p}
+            </div>
+          ))}
+        </div>
+        </div>
+        </div>
+ )
