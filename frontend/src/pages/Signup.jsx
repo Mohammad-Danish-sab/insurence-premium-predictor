@@ -58,6 +58,21 @@ const handleSubmit = async (e) => {
             </div>
           ))}
         </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 text-red-600
+                            text-sm rounded-xl px-4 py-3 mb-6">
+              {apiError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+
+          </form>
+        </div>
         </div>
         </div>
  )
