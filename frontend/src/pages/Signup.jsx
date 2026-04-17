@@ -27,3 +27,10 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
+
+  const perks = [
+    "Free premium predictions",
+    "PDF report download",
+    "Risk score analysis",
+    "Plan comparison",
+  ];
