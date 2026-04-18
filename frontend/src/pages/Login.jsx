@@ -130,6 +130,15 @@ export default function Login() {
              )}
            </button>
          </form>
+         <p className="text-center text-sm text-gray-500 mt-6">
+           Don't have an account?{" "}
+           <Link
+             to="/signup"
+             className="text-secondary font-medium hover:underline"
+           >
+             Sign up free
+           </Link>
+         </p>
        </div>
      </div>
    </div>
