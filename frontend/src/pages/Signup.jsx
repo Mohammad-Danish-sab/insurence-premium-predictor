@@ -130,34 +130,62 @@ const handleSubmit = async (e) => {
                <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
              )}
            </div>
-             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPass ? "text" : "password"}
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Min 6 characters"
-                  className={`w-full px-4 py-2.5 rounded-xl border text-sm outline-none
+           <div>
+             <label className="block text-sm font-medium text-gray-700 mb-1">
+               Password
+             </label>
+             <div className="relative">
+               <input
+                 type={showPass ? "text" : "password"}
+                 name="password"
+                 value={form.password}
+                 onChange={handleChange}
+                 placeholder="Min 6 characters"
+                 className={`w-full px-4 py-2.5 rounded-xl border text-sm outline-none
                               focus:ring-2 focus:ring-secondary transition pr-10
                               ${errors.password ? "border-red-400" : "border-gray-200"}`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
-                >
-                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
-            </div>
+               />
+               <button
+                 type="button"
+                 onClick={() => setShowPass(!showPass)}
+                 className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+               >
+                 {showPass ? (
+                   <EyeOff className="w-4 h-4" />
+                 ) : (
+                   <Eye className="w-4 h-4" />
+                 )}
+               </button>
+             </div>
+             {errors.password && (
+               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+             )}
+           </div>
+           <button
+             type="submit"
+             disabled={loading}
+             className="w-full bg-secondary hover:bg-primary text-white font-semibold
+                         py-3 rounded-xl transition flex items-center justify-center gap-2
+                         disabled:opacity-60"
+           >
+             {loading ? (
+               <>
+                 <Loader className="w-4 h-4 animate-spin" /> Creating account...
+               </>
+             ) : (
+               "Create Account"
+             )}
+           </button>
          </form>
+         <p className="text-center text-sm text-gray-500 mt-6">
+           Already have an account?{" "}
+           <Link
+             to="/login"
+             className="text-secondary font-medium hover:underline"
+           >
+             Login
+           </Link>
+         </p>
        </div>
      </div>
    </div>
