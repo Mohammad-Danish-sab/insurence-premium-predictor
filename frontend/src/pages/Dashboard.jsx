@@ -43,4 +43,44 @@ export default function Dashboard() {
       premium: p.result?.predicted_premium || 0,
       risk: p.result?.risk_score || 0,
     }));  
+
+      const statCards = [
+        {
+          label: "Total Predictions",
+          value: stats?.total ?? 0,
+          icon: <Zap className="w-5 h-5 text-secondary" />,
+          bg: "bg-blue-50",
+        },
+        {
+          label: "Avg Premium",
+          value: stats ? formatINR(stats.avg_premium) : "—",
+          icon: <TrendingUp className="w-5 h-5 text-success" />,
+          bg: "bg-green-50",
+        },
+        {
+          label: "Highest Premium",
+          value: stats ? formatINR(stats.max_premium) : "—",
+          icon: <AlertTriangle className="w-5 h-5 text-accent" />,
+          bg: "bg-orange-50",
+        },
+        {
+          label: "Avg Risk Score",
+          value: stats ? `${stats.avg_risk_score} / 100` : "—",
+          icon: <Shield className="w-5 h-5 text-danger" />,
+          bg: "bg-red-50",
+        },
+      ];
+
+      if (loading)
+        return (
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-1 flex items-center justify-center">
+              <div
+                className="w-10 h-10 border-4 border-secondary border-t-transparent
+                        rounded-full animate-spin"
+              />
+            </div>
+          </div>
+        );
 }
