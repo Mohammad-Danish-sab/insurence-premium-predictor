@@ -34,4 +34,13 @@ export default function Dashboard() {
     }
     fetchData()
   }, [])
+
+  const chartData = history
+    .slice(0, 7)
+    .reverse()
+    .map((p, i) => ({
+      name: `#${i + 1}`,
+      premium: p.result?.predicted_premium || 0,
+      risk: p.result?.risk_score || 0,
+    }));  
 }
