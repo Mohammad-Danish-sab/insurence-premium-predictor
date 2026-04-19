@@ -83,4 +83,34 @@ export default function Dashboard() {
             </div>
           </div>
         );
-}
+
+   return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-10">
+
+        {/* ── WELCOME ──────────────────────── */}
+        <div className="flex flex-col sm:flex-row justify-between
+                        items-start sm:items-center mb-10 gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-primary">
+              Welcome back, {user?.full_name?.split(" ")[0]} 👋
+            </h1>
+            <p className="text-gray-500 text-sm mt-1">
+              Here's your insurance prediction overview
+            </p>
+          </div>
+          <Link
+            to="/predict"
+            className="bg-secondary hover:bg-primary text-white text-sm
+                       font-semibold px-6 py-2.5 rounded-full transition
+                       flex items-center gap-2"
+          >
+            New Prediction <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        </main>
+      </div>
+      )
+      }
