@@ -90,7 +90,6 @@ export default function Dashboard() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-10">
 
-        {/* ── WELCOME ──────────────────────── */}
         <div className="flex flex-col sm:flex-row justify-between
                         items-start sm:items-center mb-10 gap-4">
           <div>
@@ -110,6 +109,27 @@ export default function Dashboard() {
             New Prediction <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {statCards.map((s, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl border border-gray-100
+                         shadow-sm p-5 flex items-center gap-4"
+            >
+              <div className={`w-11 h-11 rounded-xl flex items-center
+                              justify-center ${s.bg}`}>
+                {s.icon}
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">{s.label}</p>
+                <p className="text-lg font-bold text-primary mt-0.5">{s.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
         </main>
       </div>
       )
