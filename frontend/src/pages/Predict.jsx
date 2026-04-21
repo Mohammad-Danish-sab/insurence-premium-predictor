@@ -239,9 +239,45 @@ export default function Predict() {
               </button>
             </form>
             </div>
-            
+          <div className="flex flex-col gap-4">
+            {[
+              {
+                icon: <Shield className="w-5 h-5 text-secondary" />,
+                title: "Accurate Estimates",
+                desc: "Our rule-based engine uses real insurance factors."
+              },
+              {
+                icon: <TrendingUp className="w-5 h-5 text-success" />,
+                title: "Risk Analysis",
+                desc: "Get a personal risk score with key factors."
+              },
+              {
+                icon: <FileText className="w-5 h-5 text-accent" />,
+                title: "PDF Report",
+                desc: "Download a professional report of your quote."
+              },
+              {
+                icon: <CheckCircle className="w-5 h-5 text-primary" />,
+                title: "Plan Comparison",
+                desc: "Basic, Standard and Premium plans compared."
+              },
+            ].map((c, i) => (
+              <div key={i}
+                className="bg-white rounded-2xl border border-gray-100
+                           shadow-sm p-4 flex gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gray-50 flex
+                                items-center justify-center shrink-0">
+                  {c.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-primary">{c.title}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{c.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        </main>
+    </main>
         </div>
       )
 }
