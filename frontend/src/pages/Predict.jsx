@@ -103,4 +103,32 @@ export default function Predict() {
         )}
       </div>
     );
+
+     const Select = ({ label, name, options }) => (
+       <div>
+         <label className="block text-sm font-medium text-gray-700 mb-1">
+           {label}
+         </label>
+         <div className="relative">
+           <select
+             name={name}
+             value={form[name]}
+             onChange={handleChange}
+             className="w-full px-4 py-2.5 rounded-xl border border-gray-200
+                     text-sm outline-none focus:ring-2 focus:ring-secondary
+                     transition appearance-none bg-white"
+           >
+             {options.map((o) => (
+               <option key={o.value} value={o.value}>
+                 {o.label}
+               </option>
+             ))}
+           </select>
+           <ChevronDown
+             className="w-4 h-4 text-gray-400 absolute right-3 top-3
+                                pointer-events-none"
+           />
+         </div>
+       </div>
+     );
 }
