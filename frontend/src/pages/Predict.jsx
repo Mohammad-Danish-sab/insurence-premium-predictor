@@ -156,6 +156,49 @@ export default function Predict() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+       <div className="lg:col-span-2 bg-white rounded-2xl border
+                          border-gray-100 shadow-sm p-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <Field
+                  label="Age" name="age" type="number"
+                  placeholder="35" min="18" max="100"
+                />
+                <Field
+                  label="BMI" name="bmi" type="number"
+                  placeholder="25.5" min="10" max="60" step="0.1"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <Select label="Gender" name="sex" options={[
+                  { value: "male",   label: "Male"   },
+                  { value: "female", label: "Female" },
+                ]} />
+                <Field
+                  label="Number of Children" name="children"
+                  type="number" placeholder="0" min="0" max="10"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <Select label="Region" name="region" options={[
+                  { value: "northeast", label: "Northeast" },
+                  { value: "northwest", label: "Northwest" },
+                  { value: "southeast", label: "Southeast" },
+                  { value: "southwest", label: "Southwest" },
+                ]} />
+                <Select label="Insurance Type" name="insurance_type" options={[
+                  { value: "health", label: "🏥 Health" },
+                  { value: "life",   label: "💼 Life"   },
+                  { value: "auto",   label: "🚗 Auto"   },
+                  { value: "home",   label: "🏠 Home"   },
+                ]} />
+              </div>
+            </form>
+            </div>
             
         </div>
         </main>
