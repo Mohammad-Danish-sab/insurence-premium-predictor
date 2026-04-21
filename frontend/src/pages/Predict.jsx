@@ -387,7 +387,62 @@ export default function Predict() {
                       </div>
                     ))}
                   </div>
-                </div>     
+                </div>
+
+                <div
+                  className="bg-white rounded-2xl border border-gray-100
+                            shadow-sm p-6"
+                >
+                  <h3 className="font-semibold text-primary mb-4">
+                    Plan Comparison
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {Object.values(result.plan_comparison).map((plan, i) => (
+                      <div
+                        key={i}
+                        className={`rounded-xl border p-4 text-center
+                      ${
+                        i === 1
+                          ? "border-secondary bg-blue-50 shadow-md"
+                          : "border-gray-100 bg-gray-50"
+                      }`}
+                      >
+                        {i === 1 && (
+                          <span
+                            className="text-xs bg-secondary text-white
+                                       px-2 py-0.5 rounded-full mb-2 inline-block"
+                          >
+                            Recommended
+                          </span>
+                        )}
+                        <p className="font-bold text-primary text-lg">
+                          {plan.plan_name}
+                        </p>
+                        <p className="text-2xl font-bold text-secondary my-2">
+                          {formatINR(plan.premium)}
+                        </p>
+                        <p className="text-xs text-gray-500 mb-3">
+                          Coverage: {formatINR(plan.coverage_amount)}
+                        </p>
+                        <ul
+                          className="text-xs text-gray-600 text-left
+                                   flex flex-col gap-1.5"
+                        >
+                          {plan.features.map((f, j) => (
+                            <li key={j} className="flex items-start gap-1.5">
+                              <CheckCircle
+                                className="w-3.5 h-3.5 text-success
+                                                  shrink-0 mt-0.5"
+                              />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             )}
           </main>
