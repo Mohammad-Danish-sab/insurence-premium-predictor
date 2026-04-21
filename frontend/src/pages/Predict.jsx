@@ -277,6 +277,35 @@ export default function Predict() {
             ))}
           </div>
         </div>
+
+          {result && (
+          <div id="result" className="mt-10 flex flex-col gap-6">
+
+            {/* Premium + Risk */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2 bg-linear-to-br from-primary
+                              to-secondary text-white rounded-2xl p-6">
+                <p className="text-sm text-blue-200 mb-1">Predicted Premium</p>
+                <p className="text-4xl font-bold mb-1">
+                  {formatINR(result.predicted_premium)}
+                </p>
+                <p className="text-sm text-blue-200">
+                  Range: {formatINR(result.confidence_range.min)} —{" "}
+                  {formatINR(result.confidence_range.max)}
+                </p>
+              </div>
+              <div className={`rounded-2xl border p-6 flex flex-col
+                              items-center justify-center text-center
+                              ${riskColor(result.risk_level)}`}>
+                <AlertTriangle className="w-8 h-8 mb-2" />
+                <p className="text-3xl font-bold">{result.risk_score}</p>
+                <p className="text-sm font-medium mt-1">Risk Score</p>
+                <p className="text-xs mt-0.5">{result.risk_level} Risk</p>
+              </div>
+            </div>
+            </div>
+          )
+        }
     </main>
         </div>
       )
