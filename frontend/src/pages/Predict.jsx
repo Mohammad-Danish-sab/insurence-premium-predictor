@@ -443,6 +443,21 @@ export default function Predict() {
                   </div>
                 </div>
 
+                <div
+                  className="bg-amber-50 border border-amber-200
+                            rounded-2xl p-5 flex gap-3"
+                >
+                  <AlertTriangle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800 mb-1">
+                      Recommendation
+                    </p>
+                    <p className="text-sm text-amber-700">
+                      {result.recommendation}
+                    </p>
+                  </div>
+                </div>
+
               </div>
             )}
           </main>
