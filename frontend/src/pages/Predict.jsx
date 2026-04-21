@@ -197,6 +197,46 @@ export default function Predict() {
                   { value: "home",   label: "🏠 Home"   },
                 ]} />
               </div>
+         <div className="flex items-center justify-between p-4 rounded-xl
+                              border border-gray-200 bg-gray-50">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Smoker</p>
+                  <p className="text-xs text-gray-400">
+                    Smoking significantly increases your premium
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox" name="smoker"
+                    checked={form.smoker} onChange={handleChange}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:ring-2
+                                  peer-focus:ring-secondary rounded-full peer
+                                  peer-checked:bg-secondary transition" />
+                  <div className="absolute left-1 top-1 w-4 h-4 bg-white
+                                  rounded-full transition peer-checked:translate-x-5" />
+                </label>
+              </div>
+
+              {apiErr && (
+                <p className="text-red-500 text-sm bg-red-50 px-4 py-3
+                              rounded-xl border border-red-200">
+                  {apiErr}
+                </p>
+              )}
+
+              <button
+                type="submit" disabled={loading}
+                className="w-full bg-secondary hover:bg-primary text-white
+                           font-semibold py-3 rounded-xl transition flex
+                           items-center justify-center gap-2 disabled:opacity-60"
+              >
+                {loading
+                  ? <><Loader className="w-4 h-4 animate-spin" /> Calculating...</>
+                  : <><Shield className="w-4 h-4" /> Get My Quote</>
+                }
+              </button>
             </form>
             </div>
             
