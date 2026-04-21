@@ -131,4 +131,34 @@ export default function Predict() {
          </div>
        </div>
      );
+      return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
+
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-primary">
+            Get Your Insurance Quote
+          </h1>
+          <p className="text-gray-500 mt-2 text-sm">
+            Fill in your details below to get an instant premium prediction
+          </p>
+          {!user && (
+            <p className="text-xs text-accent mt-2">
+              ⚠️ You're using guest mode.{" "}
+              <Link to="/signup" className="underline text-secondary">
+                Sign up
+              </Link>{" "}
+              to save your predictions.
+            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+        </div>
+        </main>
+        </div>
+      )
 }
