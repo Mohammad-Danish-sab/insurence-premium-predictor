@@ -457,7 +457,18 @@ export default function Predict() {
                     </p>
                   </div>
                 </div>
-
+                {user && (
+                  <div className="text-center">
+                    <Link
+                      to="/history"
+                      className="inline-flex items-center gap-2 bg-primary hover:bg-secondary
+                             text-white font-semibold px-8 py-3 rounded-full transition"
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Full Report in History
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </main>
