@@ -52,5 +52,17 @@ export default function History() {
     useEffect(() => {
       fetchHistory(page);
     }, [page]);
-    
+   
+    const handleDelete = async (id) => {
+      if (!window.confirm("Delete this prediction?")) return;
+      setDeleting(id);
+      try {
+        await deletePrediction(id);
+        setPredictions(predictions.filter((p) => p._id !== id));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setDeleting(null);
+      }
+    };
 }
