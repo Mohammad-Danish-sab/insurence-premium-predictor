@@ -35,4 +35,22 @@ export default function History() {
   const [filter,      setFilter]      = useState("all")
   const [deleting,    setDeleting]    = useState(null)
 
+
+    const fetchHistory = async (p = 1) => {
+      setLoading(true);
+      try {
+        const res = await getHistory(p);
+        setPredictions(res.predictions || []);
+        setTotalPages(res.pages || 1);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      fetchHistory(page);
+    }, [page]);
+    
 }
