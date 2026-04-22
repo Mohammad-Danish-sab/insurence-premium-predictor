@@ -65,4 +65,14 @@ export default function History() {
         setDeleting(null);
       }
     };
+
+    const filtered = predictions.filter((p) => {
+      const matchFilter =
+        filter === "all" || p.input?.insurance_type === filter;
+      const matchSearch =
+        search === "" ||
+        p.input?.insurance_type?.includes(search.toLowerCase()) ||
+        p.result?.risk_level?.toLowerCase().includes(search.toLowerCase());
+      return matchFilter && matchSearch;
+    });
 }
