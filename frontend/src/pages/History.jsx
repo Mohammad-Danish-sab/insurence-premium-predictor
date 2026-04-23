@@ -229,10 +229,50 @@ export default function History() {
                   </tbody>
                 </table>
               </div>
+         <div className="md:hidden flex flex-col divide-y divide-gray-100">
+                {filtered.map((p) => (
+                  <div key={p._id} className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="capitalize font-semibold text-primary">
+                        {p.input?.insurance_type} Insurance
+                      </span>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium
+                                      ${riskBadge(p.result?.risk_level)}`}>
+                        {p.result?.risk_level}
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold text-secondary mb-2">
+                      {formatINR(p.result?.predicted_premium || 0)}
+                    </p>
+                    <div className="flex gap-4 text-xs text-gray-500 mb-3">
+                      <span>Age: {p.input?.age}</span>
+                      <span>BMI: {p.input?.bmi}</span>
+                      <span>Smoker: {p.input?.smoker ? "Yes" : "No"}</span>
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => downloadReport(p._id)}
+                        className="flex items-center gap-1.5 text-xs text-secondary
+                                   font-medium hover:underline"
+                      >
+                        <FileText className="w-3.5 h-3.5" /> Report
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p._id)}
+                        disabled={deleting === p._id}
+                        className="flex items-center gap-1.5 text-xs text-danger
+                                   font-medium hover:underline disabled:opacity-40"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </> 
           )}
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
+    </div>
   ) 
 }
