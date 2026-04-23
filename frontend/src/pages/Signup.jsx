@@ -5,16 +5,46 @@ import { signup as signupService } from "../services/authService";
 import { validateSignup } from "../utils/validateForm";
 import { Shield, Eye, EyeOff, Loader, CheckCircle } from "lucide-react";
 
-const handleChange = (e) => {
-  SVGAnimateTransformElement({ ...form, [e.target.name]: e.target.value });
-  setErrors({ ...errors, [e.target.name]: "" });
-  setApiError("");
-};
+
+function Signup() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+
+  const [form, setForm] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
+
+    setApiError("");
+  };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
   const errs = validateSignup(form);
-  if (Object.keys(errs).length) return setErrors(errs);
+  if (Object.keys(errs).length > 0) { 
+    setErrors(errs);
+    return;
+  }
 
   setLoading(true);
   try {
@@ -190,3 +220,4 @@ const handleSubmit = async (e) => {
      </div>
    </div>
  );
+}
