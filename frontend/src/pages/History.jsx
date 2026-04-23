@@ -103,7 +103,6 @@ export default function History() {
 
          <div className="bg-white rounded-2xl border border-gray-100
                         shadow-sm p-4 mb-6 flex flex-col sm:flex-row gap-3">
-          {/* Search */}
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
             <input
@@ -115,6 +114,23 @@ export default function History() {
                          text-sm outline-none focus:ring-2 focus:ring-secondary"
             />
           </div>
+
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-400" />
+            {["all", "health", "life", "auto", "home"].map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium
+                            transition capitalize
+                  ${filter === f
+                    ? "bg-secondary text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+              >
+                {f}
+              </button>
+            ))}
+        </div>
         </div>
       </main>
     </div>
