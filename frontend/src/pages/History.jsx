@@ -75,4 +75,32 @@ export default function History() {
         p.result?.risk_level?.toLowerCase().includes(search.toLowerCase());
       return matchFilter && matchSearch;
     });
+
+      return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-10">
+
+        <div className="flex flex-col sm:flex-row justify-between
+                        items-start sm:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-primary">
+              Prediction History
+            </h1>
+            <p className="text-gray-500 text-sm mt-1">
+              All your past insurance premium predictions
+            </p>
+          </div>
+          <Link
+            to="/predict"
+            className="bg-secondary hover:bg-primary text-white text-sm
+                       font-semibold px-6 py-2.5 rounded-full transition"
+          >
+            + New Prediction
+          </Link>
+        </div>
+      </main>
+    </div>
+  ) 
 }
