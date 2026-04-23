@@ -43,4 +43,35 @@ export default function Report() {
     fetch()
   }, [id])
 
+   if (loading)
+     return (
+       <div className="min-h-screen flex flex-col">
+         <Navbar />
+         <div className="flex-1 flex items-center justify-center">
+           <div
+             className="w-10 h-10 border-4 border-secondary border-t-transparent
+                        rounded-full animate-spin"
+           />
+         </div>
+       </div>
+     );
+
+   if (error)
+     return (
+       <div className="min-h-screen flex flex-col">
+         <Navbar />
+         <div className="flex-1 flex flex-col items-center justify-center gap-4">
+           <p className="text-gray-500">{error}</p>
+           <Link
+             to="/history"
+             className="text-secondary hover:underline text-sm"
+           >
+             ← Back to History
+           </Link>
+         </div>
+       </div>
+     );
+
+   const { input, result } = data;
+
 }
