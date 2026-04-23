@@ -141,6 +141,50 @@ export default function Report() {
                </div>
              </div>
            </div>
+           
+           <div
+             className="bg-white rounded-2xl border border-gray-100
+                          shadow-sm p-6"
+           >
+             <h2 className="font-semibold text-primary mb-4 flex items-center gap-2">
+               <FileText className="w-4 h-4" /> Input Summary
+             </h2>
+             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+               {[
+                 { label: "Age", value: `${input?.age} years` },
+                 {
+                   label: "Gender",
+                   value:
+                     input?.sex?.charAt(0).toUpperCase() + input?.sex?.slice(1),
+                 },
+                 { label: "BMI", value: input?.bmi },
+                 { label: "Children", value: input?.children },
+                 { label: "Smoker", value: input?.smoker ? "Yes" : "No" },
+                 {
+                   label: "Region",
+                   value:
+                     input?.region?.charAt(0).toUpperCase() +
+                     input?.region?.slice(1),
+                 },
+                 {
+                   label: "Type",
+                   value:
+                     input?.insurance_type?.charAt(0).toUpperCase() +
+                     input?.insurance_type?.slice(1),
+                 },
+               ].map((item, i) => (
+                 <div
+                   key={i}
+                   className="bg-gray-50 rounded-xl p-3 border border-gray-100"
+                 >
+                   <p className="text-xs text-gray-400 mb-1">{item.label}</p>
+                   <p className="text-sm font-semibold text-gray-800">
+                     {item.value}
+                   </p>
+                 </div>
+               ))}
+             </div>
+           </div>
          </main>
        </div>
      );
