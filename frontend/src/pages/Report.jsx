@@ -74,4 +74,42 @@ export default function Report() {
 
    const { input, result } = data;
 
+     return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-10">
+
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+            <Link
+              to="/history"
+              className="p-2 rounded-full hover:bg-gray-200 transition"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-primary">
+                Insurance Report
+              </h1>
+              <p className="text-gray-500 text-sm">
+                Full prediction breakdown
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => downloadReport(id)}
+            className="flex items-center gap-2 bg-secondary hover:bg-primary
+                       text-white text-sm font-semibold px-5 py-2.5
+                       rounded-full transition"
+          >
+            <Download className="w-4 h-4" /> Download PDF
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-6">
+    </div>
+    </main>
+   </div> 
+)
 }
