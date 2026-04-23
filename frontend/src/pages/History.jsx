@@ -100,6 +100,22 @@ export default function History() {
             + New Prediction
           </Link>
         </div>
+
+         <div className="bg-white rounded-2xl border border-gray-100
+                        shadow-sm p-4 mb-6 flex flex-col sm:flex-row gap-3">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+            <input
+              type="text"
+              placeholder="Search by type or risk level..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200
+                         text-sm outline-none focus:ring-2 focus:ring-secondary"
+            />
+          </div>
+        </div>
       </main>
     </div>
   ) 
