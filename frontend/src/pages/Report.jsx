@@ -75,41 +75,73 @@ export default function Report() {
    const { input, result } = data;
 
      return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
+       <div className="min-h-screen flex flex-col bg-gray-50">
+         <Navbar />
 
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-10">
-
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-3">
-            <Link
-              to="/history"
-              className="p-2 rounded-full hover:bg-gray-200 transition"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-primary">
-                Insurance Report
-              </h1>
-              <p className="text-gray-500 text-sm">
-                Full prediction breakdown
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => downloadReport(id)}
-            className="flex items-center gap-2 bg-secondary hover:bg-primary
+         <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-10">
+           <div className="flex justify-between items-center mb-8">
+             <div className="flex items-center gap-3">
+               <Link
+                 to="/history"
+                 className="p-2 rounded-full hover:bg-gray-200 transition"
+               >
+                 <ArrowLeft className="w-5 h-5 text-gray-600" />
+               </Link>
+               <div>
+                 <h1 className="text-2xl font-bold text-primary">
+                   Insurance Report
+                 </h1>
+                 <p className="text-gray-500 text-sm">
+                   Full prediction breakdown
+                 </p>
+               </div>
+             </div>
+             <button
+               onClick={() => downloadReport(id)}
+               className="flex items-center gap-2 bg-secondary hover:bg-primary
                        text-white text-sm font-semibold px-5 py-2.5
                        rounded-full transition"
-          >
-            <Download className="w-4 h-4" /> Download PDF
-          </button>
-        </div>
+             >
+               <Download className="w-4 h-4" /> Download PDF
+             </button>
+           </div>
 
-        <div className="flex flex-col gap-6">
-    </div>
-    </main>
-   </div> 
-)
+           <div className="flex flex-col gap-6"></div>
+           <div
+             className="bg-linear-to-br from-primary to-secondary
+                          text-white rounded-2xl p-8"
+           >
+             <div
+               className="flex flex-col sm:flex-row justify-between
+                            items-start sm:items-center gap-4"
+             >
+               <div>
+                 <div className="flex items-center gap-2 mb-2">
+                   <Shield className="w-5 h-5 text-blue-200" />
+                   <span className="text-blue-200 text-sm capitalize">
+                     {input?.insurance_type} Insurance
+                   </span>
+                 </div>
+                 <p className="text-5xl font-bold mb-2">
+                   {formatINR(result?.predicted_premium)}
+                 </p>
+                 <p className="text-blue-200 text-sm">
+                   Confidence Range: {formatINR(result?.confidence_range?.min)}
+                   {" — "}
+                   {formatINR(result?.confidence_range?.max)}
+                 </p>
+               </div>
+               <div
+                 className={`rounded-2xl border px-6 py-4 text-center
+                              ${riskColor(result?.risk_level)}`}
+               >
+                 <p className="text-4xl font-bold">{result?.risk_score}</p>
+                 <p className="text-sm font-medium">Risk Score</p>
+                 <p className="text-xs mt-0.5">{result?.risk_level} Risk</p>
+               </div>
+             </div>
+           </div>
+         </main>
+       </div>
+     );
 }
