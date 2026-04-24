@@ -213,6 +213,56 @@ export default function Report() {
               ))}
             </div>
           </div>
+        
+          <div className="bg-white rounded-2xl border border-gray-100
+                          shadow-sm p-6">
+            <h2 className="font-semibold text-primary mb-4">
+              Plan Comparison
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {result?.plan_comparison &&
+                Object.values(result.plan_comparison).map((plan, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-xl border p-5
+                      ${i === 1
+                        ? "border-secondary bg-blue-50 shadow"
+                        : "border-gray-100 bg-gray-50"}`}
+                  >
+                    {i === 1 && (
+                      <span className="text-xs bg-secondary text-white
+                                       px-2 py-0.5 rounded-full mb-3
+                                       inline-block">
+                        Recommended
+                      </span>
+                    )}
+                    <p className="font-bold text-primary text-lg">
+                      {plan.plan_name}
+                    </p>
+                    <p className="text-2xl font-bold text-secondary my-2">
+                      {formatINR(plan.premium)}
+                    </p>
+                    <p className="text-xs text-gray-500 mb-1">
+                      Coverage: {formatINR(plan.coverage_amount)}
+                    </p>
+                    <p className="text-xs text-gray-500 mb-3">
+                      Deductible: {formatINR(plan.deductible)}
+                    </p>
+                    <ul className="flex flex-col gap-1.5">
+                      {plan.features.map((f, j) => (
+                        <li key={j}
+                          className="flex items-start gap-1.5 text-xs text-gray-600">
+                          <CheckCircle className="w-3.5 h-3.5 text-success
+                                                  mt-0.5 shrink-0" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
 
          </main>
        </div>
