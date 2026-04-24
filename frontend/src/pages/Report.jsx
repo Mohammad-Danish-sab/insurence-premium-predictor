@@ -185,6 +185,35 @@ export default function Report() {
                ))}
              </div>
            </div>
+
+          <div className="bg-white rounded-2xl border border-gray-100
+                          shadow-sm p-6">
+            <h2 className="font-semibold text-primary mb-4 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" /> Top Factors
+            </h2>
+            <div className="flex flex-col gap-3">
+              {result?.top_factors?.map((f, i) => (
+                <div key={i}
+                  className="flex items-center justify-between p-4
+                             rounded-xl bg-gray-50 border border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-8 rounded-full
+                      ${f.direction === "increases"
+                        ? "bg-danger" : "bg-success"}`} />
+                    <span className="text-sm font-medium text-gray-700">
+                      {f.factor}
+                    </span>
+                  </div>
+                  <span className={`text-sm font-bold
+                    ${f.direction === "increases"
+                      ? "text-danger" : "text-success"}`}>
+                    {f.impact}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
          </main>
        </div>
      );
