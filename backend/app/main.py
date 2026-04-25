@@ -10,7 +10,7 @@ from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await connect_db()       # ← runs on startup
+    await connect_db()       
     yield
     await disconnect_db() 
 
@@ -18,22 +18,35 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Insurance Premium Prediction API",
     description="AI-powered insurance premium predictor",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
+
+origins = [
+    "http://localhost:5173",    
+    "http://localhost:3000",   
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
 
 # CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600
 )
 
-# Connect to MongoDB on startup
-@app.on_event("startup")
-async def startup():
-    await connect_db()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
+# # Connect to MongoDB on startup
+# @app.on_event("startup")
+# async def startup():
+#     await connect_db()
 
 # Register routes
 app.include_router(auth.router,    prefix="/api/auth",    tags=["Auth"])
