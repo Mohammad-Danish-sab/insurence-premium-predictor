@@ -3,9 +3,6 @@ from typing import Optional
 from datetime import datetime
 from enum import Enum
 
-
-# ENUMS
-
 class UserRole(str, Enum):
     user  = "user"
     agent = "agent"
