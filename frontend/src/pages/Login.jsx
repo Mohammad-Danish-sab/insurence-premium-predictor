@@ -25,7 +25,6 @@ export default function Login() {
     e.preventDefault()
     const errs = validateLogin(form)
     if (Object.keys(errs).length) return setErrors(errs)
-
     setLoading(true)
     try {
       const res = await loginService(form)
