@@ -30,10 +30,24 @@ export const deletePrediction = async (id) => {
   return res.data;
 };
 
-export const downloadReport = (id) => {
-  const token = localStorage.getItem("token");
-  window.open(
-    `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/predict/report/${id}?token=${token}`,
-    "_blank",
-  );
+export const downloadReport = async (id) => {
+  try {
+    const res = await api.get(
+      `/api/predict/report/${id}`,
+      { responseType: "blob" }, // ← key fix
+    );
+
+    // Create download link
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `insurance_report_${id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Report download failed:", err);
+    alert("Failed to download report. Please try again.");
+  }
 };
