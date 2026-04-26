@@ -153,10 +153,10 @@ export default function Home() {
       <section className="py-20 px-4 bg-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-primary text-blue-600">
+            <h2 className="text-3xl font-bold text-primary text-cyan-950">
               Everything You Need
             </h2>
-            <p className="text-slate-700 mt-3">
+            <p className="text-red-600 mt-3">
               Powerful features to help you make smarter insurance decisions
             </p>
           </div>
@@ -165,17 +165,17 @@ export default function Home() {
             {features.map((f, i) => (
               <div
                 key={i}
-                className="bg-linear-to-br from-blue-50 via-blue-100 p-6 rounded-2xl shadow-sm border border-gray-100
+                className="bg-linear-to-br from-white to-blue-100 p-6 rounded-2xl shadow-sm border border-gray-100
                            hover:shadow-md hover:-translate-y-1 transition"
               >
                 <div
-                  className="w-12 h-12 bg-blue-100 rounded-xl flex items-center
+                  className="w-12 h-12 bg-blue-200 rounded-xl flex items-center
                                 justify-center mb-4"
                 >
                   {f.icon}
                 </div>
                 <h3 className="font-semibold text-primary mb-2">{f.title}</h3>
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-sm text-gray-900 leading-relaxed">
                   {f.desc}
                 </p>
               </div>
@@ -184,11 +184,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-linear-to-br from-red-400 via-blue-300">
+      <section className="py-20 px-4 bg-linear-to-br from-red-100 via-blue-200 to-red-300">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-slate-600">How It Works</h2>
-            <p className="text-gray-600 mt-3">
+            <h2 className="text-3xl font-bold text-cyan-950">How It Works</h2>
+            <p className="text-red-600 mt-3">
               Get your quote in 4 simple steps
             </p>
           </div>
@@ -197,7 +197,7 @@ export default function Home() {
             {steps.map((s, i) => (
               <div key={i} className="relative text-center">
                 <div
-                  className="w-14 h-14 bg-secondary text-white rounded-full
+                  className="w-14 h-14 bg-secondary text-zinc-950 rounded-full
                                 flex items-center justify-center text-xl font-bold
                                 mx-auto mb-4"
                 >
@@ -206,11 +206,11 @@ export default function Home() {
                 {i < steps.length - 1 && (
                   <div
                     className="hidden lg:block absolute top-7 left-[60%]
-                                  w-full h-0.5 bg-gray-200"
+                                  w-full h-0.5 bg-teal-800"
                   />
                 )}
                 <h3 className="font-semibold text-primary mb-2">{s.title}</h3>
-                <p className="text-sm text-gray-500">{s.desc}</p>
+                <p className="text-sm text-red-600">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -220,31 +220,27 @@ export default function Home() {
       <section className="py-20 px-4 bg-slate-100">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-primary">Insurance Types</h2>
-            <p className="text-gray-500 mt-3">
+            <h2 className="text-3xl font-bold text-primary text-cyan-950">Insurance Types</h2>
+            <p className="text-red-600 mt-3">
               We support all major insurance categories
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
             {[
-              {
-                emoji: "🏥",
-                type: "Health",
-                desc: "Medical & hospitalization",
-              },
+              { emoji: "🏥", type: "Health", desc: "Medical & hospitalization",},
               { emoji: "🚗", type: "Auto", desc: "Vehicle & motor coverage" },
               { emoji: "🏠", type: "Home", desc: "Property & home coverage" },
               { emoji: "💼", type: "Life", desc: "Life & term coverage" },
             ].map((t, i) => (
               <div
                 key={i}
-                className="bg-linear-to-br from-blue-50 via-blue-100 p-6 rounded-2xl shadow-sm border border-slate-300
+                className="bg-linear-to-br from-white to-blue-100 p-6 rounded-2xl shadow-sm border border-slate-300
                            text-center hover:border-secondary hover:shadow-md transition"
               >
                 <div className="text-4xl mb-3">{t.emoji}</div>
                 <h3 className="font-semibold text-primary">{t.type}</h3>
-                <p className="text-xs text-gray-500 mt-1">{t.desc}</p>
+                <p className="text-xs text-gray-900 mt-1">{t.desc}</p>
               </div>
             ))}
           </div>
@@ -254,14 +250,14 @@ export default function Home() {
       <section className="py-20 px-4 bg-slate-100">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-primary">What Users Say</h2>
+            <h2 className="text-3xl font-bold text-primary text-cyan-950">What Users Say</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="bg-linear-to-br from-blue-50 via-blue-100 p-6 rounded-2xl border border-slate-300"
+                className="bg-linear-to-br from-white to-blue-100 p-6 rounded-2xl border border-slate-300"
               >
                 <div className="flex gap-1 mb-3">
                   {[...Array(t.stars)].map((_, j) => (
