@@ -94,7 +94,7 @@ export default function Home() {
       <Navbar />
 
       <section
-        className="bg-linear-to-br from-red-400 via-blue-300 to-secondary
+        className="bg-linear-to-r from-cyan-950 to-sky-200
                           text-cyan-900 py-24 px-4"
       >
         <div className="max-w-4xl mx-auto text-center">
@@ -102,13 +102,13 @@ export default function Home() {
             className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5
                           rounded-full text-sm mb-6 backdrop-blur"
           >
-            <Shield className="w-4 h-4 text-red-400" />
+            <Shield className="w-4 h-4 text-red-600" />
             Smart Insurance Premium Calculator
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 text-white">
             Know Your Insurance
-            <span className="text-accent block">Premium Instantly</span>
+            <span className="text-accent block text-black">Premium Instantly</span>
           </h1>
 
           <p className="text-lg text-emerald-100 max-w-2xl mx-auto mb-10">

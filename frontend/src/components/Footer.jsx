@@ -4,13 +4,13 @@ import { Shield, Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-blue-200 mt-auto">
+    <footer className="bg-slate-500 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-7 h-7 text-secondary" />
-              <span className="text-xl font-bold text-red-500">
+              <span className="text-xl font-bold text-white">
                 Insure<span className="text-secondary text-red-500">Predict</span>
               </span>
             </div>
