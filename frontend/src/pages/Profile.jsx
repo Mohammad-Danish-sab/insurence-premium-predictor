@@ -220,10 +220,46 @@ export default function Profile() {
                 accept="image/*"
                 onChange={handleAvatarChange}
                 className="hidden"
-              /> 
+              />
             </div>
 
-          
+            <div className="flex-1 text-center sm:text-left">
+              <div
+                className="flex items-center gap-2 justify-center
+                              sm:justify-start mb-1"
+              >
+                <h1 className="text-2xl font-bold">{user?.full_name}</h1>
+                <BadgeCheck className="w-5 h-5 text-[#F4A261]" />
+              </div>
+              <p className="text-blue-200 text-sm mb-1">{user?.email}</p>
+              {user?.username && (
+                <p className="text-blue-300 text-sm mb-2">@{user.username}</p>
+              )}
+              <div
+                className="flex items-center gap-2 justify-center
+                              sm:justify-start"
+              >
+                <span
+                  className="px-3 py-1 bg-white/20 backdrop-blur
+                                 rounded-full text-xs font-medium capitalize"
+                >
+                  {user?.role} Account
+                </span>
+                <span
+                  className="px-3 py-1 bg-green-500/30 rounded-full
+                                 text-xs font-medium text-green-200"
+                >
+                  ✅ Active
+                </span>
+              </div>
+
+              {avatarFile && (
+                <p className="text-xs text-[#F4A261] mt-2">
+                  📸 New photo selected — save profile to apply
+                </p>
+              )}
+            </div>
+            
           </div>
         </div>
       </main>
