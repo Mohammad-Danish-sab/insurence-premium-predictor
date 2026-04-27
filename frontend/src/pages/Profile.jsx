@@ -302,6 +302,25 @@ export default function Profile() {
             </button>
           ))}
         </div>
+
+        {success && (
+          <div
+            className="flex items-center gap-3 bg-green-50 border
+                          border-green-200 rounded-2xl px-5 py-3 mb-5"
+          >
+            <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
+            <p className="text-green-700 text-sm font-medium">{success}</p>
+          </div>
+        )}
+        {error && (
+          <div
+            className="flex items-center gap-3 bg-red-50 border
+                          border-red-200 rounded-2xl px-5 py-3 mb-5"
+          >
+            <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+          </div>
+        )}
       </main>
     </div>
   );
