@@ -321,6 +321,292 @@ export default function Profile() {
             <p className="text-red-600 text-sm font-medium">{error}</p>
           </div>
         )}
+
+        {tab === "profile" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div
+              className="lg:col-span-2 bg-slate-300 rounded-3xl border
+                            border-gray-100 shadow-sm p-8"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <Edit3 className="w-5 h-5 text-[#2E86AB]" />
+                <h2 className="font-bold text-[#1E3A5F]">Edit Profile</h2>
+              </div>
+
+              <form
+                onSubmit={handleProfileSubmit}
+                className="flex flex-col gap-5"
+              >
+                <div
+                  className="flex items-center gap-4 p-4 bg-gray-50
+                                rounded-2xl border border-gray-100"
+                >
+                  <div
+                    className="w-16 h-16 rounded-xl overflow-hidden
+                                  bg-[#2E86AB]/10 shrink-0"
+                  >
+                    {currentAvatar ? (
+                      <img
+                        src={currentAvatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div
+                        className="w-full h-full flex items-center
+                                      justify-center text-2xl font-bold
+                                      text-[#2E86AB]"
+                      >
+                        {user?.full_name?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-700 mb-1">
+                      Profile Picture
+                    </p>
+                    <p className="text-xs text-gray-400 mb-2">
+                      JPG, PNG or GIF. Max size 2MB.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      className="flex items-center gap-2 bg-[#2E86AB]/10
+                                 hover:bg-[#2E86AB]/20 text-[#2E86AB]
+                                 text-xs font-semibold px-3 py-1.5
+                                 rounded-lg transition"
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                      {avatarFile ? "Change Photo" : "Upload Photo"}
+                    </button>
+                  </div>
+                  {avatarFile && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAvatar(null);
+                        setAvatarFile(null);
+                      }}
+                      className="text-xs text-red-400 hover:text-red-600
+                                 transition"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                {/* Username */}
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Username
+                    <span className="text-gray-400 font-normal ml-1">
+                      (optional)
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <span
+                      className="absolute left-4 top-3 text-gray-400
+                                     text-sm font-medium"
+                    >
+                      @
+                    </span>
+                    <input
+                      type="text"
+                      name="username"
+                      value={profileForm.username}
+                      onChange={handleProfileChange}
+                      placeholder="username"
+                      className="w-full pl-8 pr-4 py-3 rounded-xl border
+                                 border-gray-200 text-sm outline-none
+                                 focus:ring-2 focus:ring-[#2E86AB] bg-white"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Your unique username on InsurePredict
+                  </p>
+                </div>
+
+                {/* Full Name */}
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                     text-gray-400"
+                    />
+                    <input
+                      type="text"
+                      name="full_name"
+                      value={profileForm.full_name}
+                      onChange={handleProfileChange}
+                      placeholder="Your full name"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border
+                                 border-gray-200 text-sm outline-none
+                                 focus:ring-2 focus:ring-[#2E86AB] bg-white"
+                    />
+                  </div>
+                </div>
+
+                {/* Email (readonly) */}
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Email Address
+                    <span className="text-gray-400 font-normal ml-1">
+                      (cannot change)
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <Mail
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                     text-gray-400"
+                    />
+                    <input
+                      type="email"
+                      value={user?.email}
+                      disabled
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border
+                                 border-gray-100 text-sm bg-gray-50
+                                 text-gray-400 cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <Phone
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                      text-gray-400"
+                    />
+                    <input
+                      type="text"
+                      name="phone"
+                      value={profileForm.phone}
+                      onChange={handleProfileChange}
+                      placeholder="+91"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border
+                                 border-gray-200 text-sm outline-none
+                                 focus:ring-2 focus:ring-[#2E86AB] bg-white"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-linear-to-r from-[#2E86AB]
+                             to-[#1E3A5F] text-white font-semibold
+                             py-3.5 rounded-xl transition flex items-center
+                             justify-center gap-2 disabled:opacity-60
+                             shadow-lg hover:opacity-90"
+                >
+                  {loading ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" /> Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" /> Save Changes
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div
+                className="bg-slate-300 rounded-3xl border border-gray-200
+                              shadow-sm p-6"
+              >
+                <h3 className="font-bold text-[#1E3A5F] mb-4">
+                  Account Summary
+                </h3>
+                {[
+                  {
+                    icon: <User className="w-4 h-4 text-red-500" />,
+                    label: "Name",
+                    value: user?.full_name,
+                  },
+                  {
+                    icon: <Mail className="w-4 h-4 text-blue-500" />,
+                    label: "Email",
+                    value: user?.email,
+                  },
+                  {
+                    icon: <Phone className="w-4 h-4 text-red-500" />,
+                    label: "Phone",
+                    value: user?.phone || "Not set",
+                  },
+                  {
+                    icon: <Shield className="w-4 h-4 text-green-500" />,
+                    label: "Role",
+                    value:
+                      user?.role?.charAt(0).toUpperCase() +
+                      user?.role?.slice(1),
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-3 py-3
+                               border-b border-gray-50 last:border-0"
+                  >
+                    {item.icon}
+                    <div>
+                      <p className="text-xs text-gray-400">{item.label}</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        {item.value}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className="bg-blue-50 rounded-2xl border border-blue-100
+                              p-4"
+              >
+                <p className="text-sm font-semibold text-[#1E3A5F] mb-2">
+                  📸 Photo Tips
+                </p>
+                <ul className="text-xs text-gray-500 flex flex-col gap-1">
+                  <li> ➡️ Use a clear, front-facing photo</li>
+                  <li> ➡️ Good lighting recommended</li>
+                  <li> ➡️ Max size: 2MB</li>
+                  <li> ➡️ Formats: JPG, PNG, GIF</li>
+                </ul>
+              </div>
+
+              <div
+                className="bg-linear-to-r from-[#1E3A5F]
+                              to-[#2E86AB] rounded-2xl p-4 text-white"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="w-4 h-4 text-[#F4A261]" />
+                  <p className="text-sm font-semibold">Your Priority is Our Priority</p>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
