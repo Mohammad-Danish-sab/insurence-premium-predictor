@@ -162,22 +162,71 @@ export default function Profile() {
       <Navbar />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
-
-        <div className="bg-linear-to-r from-[#1E3A5F] to-[#2E86AB]
+        <div
+          className="bg-linear-to-r from-[#1E3A5F] to-[#2E86AB]
                         rounded-3xl p-8 mb-8 text-white relative
-                        overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white
+                        overflow-hidden"
+        >
+          <div
+            className="absolute top-0 right-0 w-64 h-64 bg-white
                           opacity-5 rounded-full -translate-y-32
-                          translate-x-32" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white
+                          translate-x-32"
+          />
+          <div
+            className="absolute bottom-0 left-0 w-40 h-40 bg-white
                           opacity-5 rounded-full translate-y-20
-                          -translate-x-20" />
+                          -translate-x-20"
+          />
 
-          <div className="relative z-10 flex flex-col sm:flex-row
-                          items-center sm:items-start gap-6">
+          <div
+            className="relative z-10 flex flex-col sm:flex-row
+                          items-center sm:items-start gap-6"
+          >
+            <div className="relative shrink-0">
+              <div
+                className="w-24 h-24 rounded-2xl border-4
+                              border-white/30 overflow-hidden
+                              bg-white/20 backdrop-blur"
+              >
+                {currentAvatar ? (
+                  <img
+                    src={currentAvatar}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center
+                                  justify-center text-4xl font-bold
+                                  text-white"
+                  >
+                    {user?.full_name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="absolute -bottom-2 -right-2 w-8 h-8
+                           bg-[#F4A261] hover:bg-orange-500 rounded-full
+                           flex items-center justify-center shadow-lg
+                           transition"
+              >
+                <Camera className="w-4 h-4 text-white" />
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              /> 
+            </div>
+
+          
+          </div>
         </div>
-        </div>
-        </main>
-        </div>
-  )
+      </main>
+    </div>
+  );
 }
