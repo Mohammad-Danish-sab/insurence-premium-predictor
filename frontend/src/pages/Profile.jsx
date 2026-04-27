@@ -259,7 +259,22 @@ export default function Profile() {
                 </p>
               )}
             </div>
-            
+
+                  <div className="hidden lg:flex flex-col gap-2 shrink-0">
+              {[
+                { label: "Member Since", value: "2025" },
+                { label: "Account Type", value: user?.role || "User" },
+                { label: "Status",       value: "Active ✅" },
+              ].map((s, i) => (
+                <div key={i} className="bg-white/10 backdrop-blur
+                                        rounded-xl px-4 py-2 text-right">
+                  <p className="text-xs text-blue-200">{s.label}</p>
+                  <p className="text-sm font-semibold capitalize">
+                    {s.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
