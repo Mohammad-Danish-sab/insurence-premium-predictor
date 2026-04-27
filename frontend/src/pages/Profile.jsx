@@ -260,22 +260,47 @@ export default function Profile() {
               )}
             </div>
 
-                  <div className="hidden lg:flex flex-col gap-2 shrink-0">
+            <div className="hidden lg:flex flex-col gap-2 shrink-0">
               {[
                 { label: "Member Since", value: "2025" },
                 { label: "Account Type", value: user?.role || "User" },
-                { label: "Status",       value: "Active ✅" },
+                { label: "Status", value: "Active ✅" },
               ].map((s, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur
-                                        rounded-xl px-4 py-2 text-right">
+                <div
+                  key={i}
+                  className="bg-white/10 backdrop-blur
+                                        rounded-xl px-4 py-2 text-right"
+                >
                   <p className="text-xs text-blue-200">{s.label}</p>
-                  <p className="text-sm font-semibold capitalize">
-                    {s.value}
-                  </p>
+                  <p className="text-sm font-semibold capitalize">{s.value}</p>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+        <div
+          className="flex gap-2 mb-6 bg-white p-1.5 rounded-2xl
+                        border border-gray-100 shadow-sm w-fit"
+        >
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => {
+                setTab(t.id);
+                setSuccess("");
+                setError("");
+              }}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl
+                          text-sm font-medium transition
+                ${
+                  tab === t.id
+                    ? "bg-[#2E86AB] text-white shadow"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+            >
+              {t.icon} {t.label}
+            </button>
+          ))}
         </div>
       </main>
     </div>
