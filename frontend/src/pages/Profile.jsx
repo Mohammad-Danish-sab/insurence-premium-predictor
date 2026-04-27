@@ -599,14 +599,266 @@ export default function Profile() {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Shield className="w-4 h-4 text-[#F4A261]" />
-                  <p className="text-sm font-semibold">Your Priority is Our Priority</p>
+                  <p className="text-sm font-semibold">
+                    Your Priority is Our Priority
+                  </p>
                 </div>
-                
               </div>
             </div>
           </div>
         )}
 
+        {tab === "password" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div
+              className="lg:col-span-2 bg-slate-300 rounded-3xl border
+                            border-gray-100 shadow-sm p-8"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <Key className="w-5 h-5 text-[#2E86AB]" />
+                <h2 className="font-bold text-[#1E3A5F]">Change Password</h2>
+              </div>
+
+              <form onSubmit={handlePassSubmit} className="flex flex-col gap-5">
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Current Password
+                  </label>
+                  <div className="relative">
+                    <Lock
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                     text-gray-400"
+                    />
+                    <input
+                      type={showOld ? "text" : "password"}
+                      name="old_password"
+                      value={passForm.old_password}
+                      onChange={handlePassChange}
+                      placeholder="Enter current password"
+                      className="w-full pl-10 pr-12 py-3 rounded-xl border
+                                 border-gray-200 text-sm outline-none
+                                 focus:ring-2 focus:ring-[#2E86AB] bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowOld(!showOld)}
+                      className="absolute right-3.5 top-3.5 text-gray-400
+                                 hover:text-gray-600"
+                    >
+                      {showOld ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    New Password
+                  </label>
+                  <div className="relative">
+                    <Lock
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                     text-gray-400"
+                    />
+                    <input
+                      type={showNew ? "text" : "password"}
+                      name="new_password"
+                      value={passForm.new_password}
+                      onChange={handlePassChange}
+                      placeholder="Min 6 characters"
+                      className="w-full pl-10 pr-12 py-3 rounded-xl border
+                                 border-gray-200 text-sm outline-none
+                                 focus:ring-2 focus:ring-[#2E86AB] bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNew(!showNew)}
+                      className="absolute right-3.5 top-3.5 text-gray-400
+                                 hover:text-gray-600"
+                    >
+                      {showNew ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {passForm.new_password && (
+                    <div className="mt-2">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div
+                            key={i}
+                            className={`h-1.5 flex-1 rounded-full transition-all
+                              ${
+                                i <= strength.score
+                                  ? strength.color
+                                  : "bg-gray-200"
+                              }`}
+                          />
+                        ))}
+                      </div>
+                      <p
+                        className={`text-xs mt-1 font-medium
+                        ${
+                          strength.score <= 1
+                            ? "text-red-500"
+                            : strength.score <= 2
+                              ? "text-yellow-500"
+                              : strength.score <= 3
+                                ? "text-blue-500"
+                                : "text-green-500"
+                        }`}
+                      >
+                        {strength.label} password
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    className="block text-sm font-semibold
+                                    text-gray-700 mb-1.5"
+                  >
+                    Confirm New Password
+                  </label>
+                  <div className="relative">
+                    <Lock
+                      className="absolute left-3.5 top-3.5 w-4 h-4
+                                     text-gray-400"
+                    />
+                    <input
+                      type={showCon ? "text" : "password"}
+                      name="confirm"
+                      value={passForm.confirm}
+                      onChange={handlePassChange}
+                      placeholder="Repeat new password"
+                      className={`w-full pl-10 pr-12 py-3 rounded-xl border
+                                  text-sm outline-none focus:ring-2
+                                  focus:ring-[#2E86AB] bg-white
+                                  ${
+                                    passForm.confirm &&
+                                    passForm.confirm !== passForm.new_password
+                                      ? "border-red-400 bg-red-50"
+                                      : "border-gray-200"
+                                  }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCon(!showCon)}
+                      className="absolute right-3.5 top-3.5 text-gray-400
+                                 hover:text-gray-600"
+                    >
+                      {showCon ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+                  {passForm.confirm &&
+                    passForm.confirm !== passForm.new_password && (
+                      <p className="text-red-500 text-xs mt-1">
+                        ⚠ Passwords do not match
+                      </p>
+                    )}
+                  {passForm.confirm &&
+                    passForm.confirm === passForm.new_password &&
+                    passForm.confirm.length > 0 && (
+                      <p className="text-green-500 text-xs mt-1">
+                        ✅ Passwords match
+                      </p>
+                    )}
+                </div>
+
+                <div
+                  className="bg-amber-50 border border-amber-200
+                                rounded-xl p-3"
+                >
+                  <p className="text-xs text-amber-700">
+                    💡 Use at least 6 characters with uppercase letters, numbers
+                    and special characters for a strong password.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-linear-to-r from-[#2E86AB]
+                             to-[#1E3A5F] text-white font-semibold
+                             py-3.5 rounded-xl transition flex items-center
+                             justify-center gap-2 disabled:opacity-60
+                             shadow-lg hover:opacity-90"
+                >
+                  {loading ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    <>
+                      <Key className="w-4 h-4" /> Update Password
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div
+                className="bg-slate-300 rounded-3xl border border-gray-100
+                              shadow-sm p-6"
+              >
+                <h3 className="font-bold text-[#1E3A5F] mb-4">
+                  🔒 Security Tips
+                </h3>
+                {[
+                  "Use at least 8 characters",
+                  "Mix uppercase and lowercase",
+                  "Add numbers and symbols",
+                  "Never reuse old passwords",
+                  "Don't share your password",
+                ].map((tip, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2 py-2
+                               border-b border-gray-50 last:border-0"
+                  >
+                    <CheckCircle
+                      className="w-3.5 h-3.5 text-green-500
+                                            shrink-0"
+                    />
+                    <p className="text-xs text-gray-600">{tip}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className="bg-linear-to-r from-[#1E3A5F]
+                              to-[#2E86AB] rounded-2xl p-4 text-white"
+              >
+                <Shield className="w-6 h-6 text-[#F4A261] mb-2" />
+                <p className="text-sm font-semibold mb-1">
+                  Your account is secure
+                </p>
+                <p className="text-xs text-blue-200">
+                  Your Priority is our Priority
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
