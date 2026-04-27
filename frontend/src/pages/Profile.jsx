@@ -123,4 +123,35 @@ export default function Profile() {
       setLoading(false);
     }
   };
+
+    const getStrength = (pass) => {
+      if (!pass) return { score: 0, label: "", color: "" };
+      let score = 0;
+      if (pass.length >= 6) score++;
+      if (pass.length >= 10) score++;
+      if (/[A-Z]/.test(pass)) score++;
+      if (/[0-9]/.test(pass)) score++;
+      if (/[^A-Za-z0-9]/.test(pass)) score++;
+      const levels = [
+        { label: "", color: "" },
+        { label: "Weak", color: "bg-red-400" },
+        { label: "Fair", color: "bg-yellow-400" },
+        { label: "Good", color: "bg-blue-400" },
+        { label: "Strong", color: "bg-green-400" },
+        { label: "Very Strong", color: "bg-green-500" },
+      ];
+      return { score, ...levels[score] };
+    };
+
+    const strength = getStrength(passForm.new_password);
+
+    const tabs = [
+      { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
+      { id: "password", label: "Security", icon: <Key className="w-4 h-4" /> },
+      {
+        id: "settings",
+        label: "Settings",
+        icon: <Settings className="w-4 h-4" />,
+      },
+    ];
 }
