@@ -154,4 +154,30 @@ export default function Profile() {
         icon: <Settings className="w-4 h-4" />,
       },
     ];
+
+      const currentAvatar = avatar || user?.avatar_url || null
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
+
+        <div className="bg-linear-to-r from-[#1E3A5F] to-[#2E86AB]
+                        rounded-3xl p-8 mb-8 text-white relative
+                        overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white
+                          opacity-5 rounded-full -translate-y-32
+                          translate-x-32" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-white
+                          opacity-5 rounded-full translate-y-20
+                          -translate-x-20" />
+
+          <div className="relative z-10 flex flex-col sm:flex-row
+                          items-center sm:items-start gap-6">
+        </div>
+        </div>
+        </main>
+        </div>
+  )
 }
