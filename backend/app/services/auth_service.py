@@ -125,6 +125,11 @@ async def update_profile(user_id: str, data: UserUpdateProfile) -> dict:
     update_fields = {
         k: v for k, v in data.dict().items() if v is not None
     }
+
+    if not update_fields:
+        user = await db.users.find_one({"_id": ObjectId(user_id)})
+        return _format_user(user)
+    
     update_fields["updated_at"] = datetime.utcnow()
 
     await db.users.update_one(

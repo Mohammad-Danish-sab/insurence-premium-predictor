@@ -46,7 +46,7 @@ class UserLogin(BaseModel):
 class UserUpdateProfile(BaseModel):
     full_name: Optional[str] = Field(None, min_length=2, max_length=50)
     phone:     Optional[str] = Field(None, pattern=r"^\+?[0-9]{10,15}$")
-        username:   Optional[str] = None 
+    username:   Optional[str] = None 
     avatar_url: Optional[str] = None
 
 
@@ -85,6 +85,7 @@ class UserInDB(BaseModel):
     hashed_password: str
     phone:          Optional[str] = None
     role:           UserRole = UserRole.user
+    username:         Optional[str]  = None 
     avatar_url:     Optional[str] = None
     is_active:      bool = True
     is_verified:    bool = False
