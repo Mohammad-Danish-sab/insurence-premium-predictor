@@ -124,38 +124,38 @@ export default function Profile() {
     }
   };
 
-    const getStrength = (pass) => {
-      if (!pass) return { score: 0, label: "", color: "" };
-      let score = 0;
-      if (pass.length >= 6) score++;
-      if (pass.length >= 10) score++;
-      if (/[A-Z]/.test(pass)) score++;
-      if (/[0-9]/.test(pass)) score++;
-      if (/[^A-Za-z0-9]/.test(pass)) score++;
-      const levels = [
-        { label: "", color: "" },
-        { label: "Weak", color: "bg-red-400" },
-        { label: "Fair", color: "bg-yellow-400" },
-        { label: "Good", color: "bg-blue-400" },
-        { label: "Strong", color: "bg-green-400" },
-        { label: "Very Strong", color: "bg-green-500" },
-      ];
-      return { score, ...levels[score] };
-    };
-
-    const strength = getStrength(passForm.new_password);
-
-    const tabs = [
-      { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
-      { id: "password", label: "Security", icon: <Key className="w-4 h-4" /> },
-      {
-        id: "settings",
-        label: "Settings",
-        icon: <Settings className="w-4 h-4" />,
-      },
+  const getStrength = (pass) => {
+    if (!pass) return { score: 0, label: "", color: "" };
+    let score = 0;
+    if (pass.length >= 6) score++;
+    if (pass.length >= 10) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+    const levels = [
+      { label: "", color: "" },
+      { label: "Weak", color: "bg-red-400" },
+      { label: "Fair", color: "bg-yellow-400" },
+      { label: "Good", color: "bg-blue-400" },
+      { label: "Strong", color: "bg-green-400" },
+      { label: "Very Strong", color: "bg-green-500" },
     ];
+    return { score, ...levels[score] };
+  };
 
-      const currentAvatar = avatar || user?.avatar_url || null
+  const strength = getStrength(passForm.new_password);
+
+  const tabs = [
+    { id: "profile", label: "Profile", icon: <User className="w-4 h-4" /> },
+    { id: "password", label: "Security", icon: <Key className="w-4 h-4" /> },
+    {
+      id: "settings",
+      label: "Settings",
+      icon: <Settings className="w-4 h-4" />,
+    },
+  ];
+
+  const currentAvatar = avatar || user?.avatar_url || null;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -859,7 +859,97 @@ export default function Profile() {
             </div>
           </div>
         )}
+        {tab === "settings" && (
+          <div className="max-w-2xl">
+            <div
+              className="bg-white rounded-3xl border border-gray-100
+                            shadow-sm p-8"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <Settings className="w-5 h-5 text-[#2E86AB]" />
+                <h2 className="font-bold text-[#1E3A5F]">Account Settings</h2>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {/* Notification toggle */}
+                {[
+                  {
+                    title: "Email Notifications",
+                    desc: "Receive prediction reports via email",
+                    defaultOn: true,
+                  },
+                  {
+                    title: "WhatsApp Alerts",
+                    desc: "Get premium alerts on WhatsApp",
+                    defaultOn: false,
+                  },
+                  {
+                    title: "Renewal Reminders",
+                    desc: "Get reminded before policy expires",
+                    defaultOn: true,
+                  },
+                  {
+                    title: "Marketing Emails",
+                    desc: "Receive tips and insurance updates",
+                    defaultOn: false,
+                  },
+                ].map((s, i) => (
+                  <ToggleRow key={i} {...s} />
+                ))}
+
+                <div className="border-t border-gray-100 pt-4 mt-2">
+                  <p className="text-sm font-semibold text-red-500 mb-3">
+                    Danger Zone
+                  </p>
+                  <button
+                    className="w-full flex items-center justify-center
+                               gap-2 border-2 border-red-200 text-red-500
+                               hover:bg-red-50 font-semibold py-3
+                               rounded-xl transition text-sm"
+                  >
+                    🗑️ Delete My Account
+                  </button>
+                  <p className="text-xs text-gray-400 text-center mt-2">
+                    This will permanently delete all your data
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
+    </div>
+  );
+}
+function ToggleRow({ title, desc, defaultOn }) {
+  const [on, setOn] = useState(defaultOn);
+  return (
+    <div
+      className="flex items-center justify-between p-4 rounded-xl
+                    bg-gray-50 border border-gray-100"
+    >
+      <div>
+        <p className="text-sm font-semibold text-gray-700">{title}</p>
+        <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+      </div>
+      <label className="relative inline-flex items-center cursor-pointer">
+        <input
+          type="checkbox"
+          checked={on}
+          onChange={() => setOn(!on)}
+          className="sr-only peer"
+        />
+        <div
+          className="w-11 h-6 bg-gray-200 peer-focus:ring-2
+                        peer-focus:ring-[#2E86AB] rounded-full peer
+                        peer-checked:bg-[#2E86AB] transition"
+        />
+        <div
+          className="absolute left-1 top-1 w-4 h-4 bg-white
+                        rounded-full transition
+                        peer-checked:translate-x-5 shadow"
+        />
+      </label>
     </div>
   );
 }

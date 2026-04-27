@@ -46,6 +46,7 @@ class UserLogin(BaseModel):
 class UserUpdateProfile(BaseModel):
     full_name: Optional[str] = Field(None, min_length=2, max_length=50)
     phone:     Optional[str] = Field(None, pattern=r"^\+?[0-9]{10,15}$")
+        username:   Optional[str] = None 
     avatar_url: Optional[str] = None
 
 

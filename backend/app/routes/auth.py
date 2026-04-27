@@ -33,10 +33,20 @@ async def signup(user: UserSignup):
 
 @router.post("/login")
 async def login(user: UserLogin):
-    result = await login_user(user)
-    if not result:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    return result
+    try:
+        result = await login_user(user)
+        if not result:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid email or password"
+            )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/me")
 async def get_profile(current_user: dict = Depends(get_current_user)):
@@ -50,8 +60,11 @@ async def update_my_profile(
     data: UserUpdateProfile,
     current_user: dict = Depends(get_current_user)
 ):
-    updated = await update_profile(current_user["sub"], data)
-    return {"message": "Profile updated ", "user": updated}
+    try:
+        updated = await update_profile(current_user["id"], data)  # ← "id"
+        return {"message": "Profile updated ✅", "user": updated}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/change-password")
 async def change_my_password(
@@ -59,7 +72,9 @@ async def change_my_password(
     current_user: dict = Depends(get_current_user)
 ):
     try:
-        await change_password(current_user["sub"], data)
-        return {"message": "Password changed successfully "}
+        await change_password(current_user["id"], data)  # ← "id"
+        return {"message": "Password changed successfully ✅"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
