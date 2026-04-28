@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 import { predictPremium, predictGuest } from "../services/predictService";
 import { validatePredictForm } from "../utils/validateForm";
 import { formatINR } from "../utils/formatCurrency";
-import ShareWhatsApp from "../components/ShareWhatsApp";
 import {
   Loader,
   Shield,
@@ -19,6 +18,8 @@ import {
   Info,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ShareWhatsApp from "../components/ShareWhatsApp";
+import InsuranceCompanies from "../components/InsuranceCompanies";
 
 const riskColor = (level) =>
   ({
@@ -45,7 +46,6 @@ export default function Predict() {
   const [loading, setLoading] = useState(false);
   const [apiErr, setApiErr] = useState("");
 
-  // ── BMI Calculator state ─────────────────────
   const [showBMI, setShowBMI] = useState(false);
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -91,7 +91,7 @@ export default function Predict() {
 
   const calculateBMI = () => {
     if (!height || !weight) return;
-    const h = parseFloat(height) / 100; 
+    const h = parseFloat(height) / 100; // cm to m
     const w = parseFloat(weight);
     const bmi = (w / (h * h)).toFixed(1);
 
@@ -119,7 +119,6 @@ export default function Predict() {
 
     setBmiResult({ bmi, category, color, tip });
 
-    // Auto-fill BMI in form
     setForm((prev) => ({ ...prev, bmi }));
   };
 
@@ -193,7 +192,6 @@ export default function Predict() {
       <Navbar />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-10">
-        {/* ── HEADER ───────────────────────── */}
         <div className="text-center mb-10">
           <div
             className="inline-flex items-center gap-2 bg-[#2E86AB]/10
@@ -305,7 +303,6 @@ export default function Predict() {
                   Calculate BMI
                 </button>
 
-                {/* BMI Result */}
                 {bmiResult && (
                   <div
                     className="bg-gray-50 rounded-2xl p-5 border
@@ -321,7 +318,6 @@ export default function Predict() {
                       </span>
                     </div>
 
-                    {/* BMI scale */}
                     <div className="mb-3">
                       <div className="flex rounded-full overflow-hidden h-2 mb-1">
                         <div className="flex-1 bg-blue-400" />
@@ -361,7 +357,6 @@ export default function Predict() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ── FORM ─────────────────────────── */}
           <div
             className="lg:col-span-2 bg-white rounded-3xl border
                           border-gray-100 shadow-sm p-8"
@@ -390,7 +385,6 @@ export default function Predict() {
                   max="100"
                 />
 
-                {/* BMI field with calculator hint */}
                 <div>
                   <label
                     className="block text-sm font-semibold
@@ -435,8 +429,8 @@ export default function Predict() {
                   label="Gender"
                   name="sex"
                   options={[
-                    { value: "male", label: "👨 Male" },
-                    { value: "female", label: "👩 Female" },
+                    { value: "male", label: "Male" },
+                    { value: "female", label: " Female" },
                   ]}
                 />
                 <Field
@@ -472,7 +466,6 @@ export default function Predict() {
                 />
               </div>
 
-              {/* Smoker Toggle */}
               <div
                 className={`flex items-center justify-between p-4
                               rounded-2xl border transition
@@ -552,7 +545,6 @@ export default function Predict() {
             </form>
           </div>
 
-          {/* ── SIDEBAR ──────────────────────── */}
           <div className="flex flex-col gap-4">
             {/* Info cards */}
             {[
@@ -602,7 +594,6 @@ export default function Predict() {
               </div>
             ))}
 
-            {/* BMI Reference */}
             <div
               className="bg-white rounded-2xl border border-gray-100
                             shadow-sm p-4"
@@ -632,7 +623,6 @@ export default function Predict() {
           </div>
         </div>
 
-        {/* ── RESULT ───────────────────────── */}
         {result && (
           <div id="result" className="mt-10 flex flex-col gap-5">
             {/* Success banner */}
@@ -698,7 +688,6 @@ export default function Predict() {
               </div>
             </div>
 
-            {/* Top Factors */}
             <div
               className="bg-white rounded-3xl border border-gray-100
                             shadow-sm p-6"
@@ -748,7 +737,6 @@ export default function Predict() {
               </div>
             </div>
 
-            {/* Plan Comparison */}
             <div
               className="bg-white rounded-3xl border border-gray-100
                             shadow-sm p-6"
@@ -812,7 +800,6 @@ export default function Predict() {
               </div>
             </div>
 
-            {/* Recommendation */}
             <div
               className="bg-linear-to-r from-amber-50 to-orange-50
                             border border-amber-200 rounded-3xl p-5
@@ -834,9 +821,8 @@ export default function Predict() {
               </div>
             </div>
 
-            {/* Actions */}
-            {user && (
-              <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {user && (
                 <Link
                   to="/history"
                   className="flex-1 flex items-center justify-center gap-2
@@ -844,22 +830,29 @@ export default function Predict() {
                              font-semibold px-6 py-3.5 rounded-2xl
                              transition text-sm"
                 >
-                  <FileText className="w-4 h-4" /> View & Download Report
+                  <FileText className="w-4 h-4" />
+                  View & Download Report
                 </Link>
-                <button
-                  onClick={() => {
-                    setResult(null);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="flex-1 flex items-center justify-center gap-2
-                             bg-white border-2 border-gray-200 hover:border-[#2E86AB]
-                             text-gray-700 font-semibold px-6 py-3.5
-                             rounded-2xl transition text-sm"
-                >
-                  🔄 Calculate Again
-                </button>
-              </div>
-            )}
+              )}
+
+              <ShareWhatsApp result={result} input={form} />
+
+              <button
+                onClick={() => {
+                  setResult(null);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="flex-1 flex items-center justify-center gap-2
+                           bg-white border-2 border-gray-200
+                           hover:border-[#2E86AB] text-gray-700
+                           font-semibold px-6 py-3.5 rounded-2xl
+                           transition text-sm"
+              >
+                🔄 Calculate Again
+              </button>
+            </div>
+
+            <InsuranceCompanies result={result} input={form} />
           </div>
         )}
       </main>
