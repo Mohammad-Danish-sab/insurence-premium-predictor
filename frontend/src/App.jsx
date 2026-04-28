@@ -11,6 +11,8 @@ import History from "./pages/History";
 import Report from "./pages/Report";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
+// import FAQ from "./pages/FAQ";
+// import Contact from "./pages/Contact";
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          {/* <Route path="/faq" element={<FAQ />} /> */}
+          {/* <Route path="/contact" element={<Contact />} /> */}
 
           {/* Protected routes */}
           <Route
