@@ -11,7 +11,8 @@ export default function Footer() {
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-7 h-7 text-secondary" />
               <span className="text-xl font-bold text-white">
-                Insure<span className="text-secondary text-red-500">Predict</span>
+                Insure
+                <span className="text-secondary text-red-500">Predict</span>
               </span>
             </div>
             <p className="text-gray-800 text-sm leading-relaxed max-w-sm">
@@ -56,6 +57,11 @@ export default function Footer() {
               <li>
                 <Link to="/history" className="hover:text-secondary transition">
                   History
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="hover:text-secondary transition">
+                  FAQ
                 </Link>
               </li>
             </ul>

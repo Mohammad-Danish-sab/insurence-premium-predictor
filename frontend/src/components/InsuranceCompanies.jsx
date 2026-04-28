@@ -136,10 +136,10 @@ function CompanyCard({ company, premium, rank, input }) {
         <div
           className={`px-4 py-1.5 text-xs font-bold text-center ${
             rank === 1
-              ? "bg-gradient-to-r from-[#2E86AB] to-[#1E3A5F] text-white"
+              ? "bg-linear-to-r from-[#2E86AB] to-[#1E3A5F] text-white"
               : rank === 2
-                ? "bg-gradient-to-r from-gray-600 to-gray-700 text-white"
-                : "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
+                ? "bg-linear-to-r from-gray-600 to-gray-700 text-white"
+                : "bg-linear-to-r from-orange-500 to-orange-600 text-white"
           }`}
         >
           {rank === 1
@@ -154,7 +154,7 @@ function CompanyCard({ company, premium, rank, input }) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
-              className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${company.color} flex items-center justify-center text-2xl shadow-lg`}
+              className={`w-12 h-12 rounded-2xl bg-linear-to-br ${company.color} flex items-center justify-center text-2xl shadow-lg`}
             >
               {company.logo}
             </div>
