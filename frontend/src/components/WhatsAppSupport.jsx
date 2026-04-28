@@ -4,7 +4,7 @@ import { X, MessageCircle, Phone, Clock, Shield } from "lucide-react";
 export default function WhatsAppSupport() {
   const [open, setOpen] = useState(false);
 
-  const PHONE = "919876543210";
+  const PHONE = "919288696822";
   const messages = [
     "Hi! I need help with my insurance premium.",
     "I want to know more about health insurance.",
@@ -31,7 +31,6 @@ export default function WhatsAppSupport() {
                         border-gray-100 w-80 overflow-hidden
                         animate-in slide-in-from-bottom-4"
         >
-          {/* Header */}
           <div
             className="bg-linear-to-r from-green-400 to-green-500
                           p-4 text-white"
@@ -67,7 +66,6 @@ export default function WhatsAppSupport() {
               </button>
             </div>
 
-            {/* Info badges */}
             <div className="flex gap-2">
               {[
                 { icon: <Clock className="w-3 h-3" />, text: "24/7" },

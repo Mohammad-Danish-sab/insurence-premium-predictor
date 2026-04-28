@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { predictPremium, predictGuest } from "../services/predictService";
 import { validatePredictForm } from "../utils/validateForm";
 import { formatINR } from "../utils/formatCurrency";
+import ShareWhatsApp from "../components/ShareWhatsApp";
 import {
   Loader,
   Shield,
@@ -88,10 +89,9 @@ export default function Predict() {
     }
   };
 
-  // ── BMI Calculator ───────────────────────────
   const calculateBMI = () => {
     if (!height || !weight) return;
-    const h = parseFloat(height) / 100; // cm to m
+    const h = parseFloat(height) / 100; 
     const w = parseFloat(weight);
     const bmi = (w / (h * h)).toFixed(1);
 
@@ -223,7 +223,6 @@ export default function Predict() {
           )}
         </div>
 
-        {/* ── BMI CALCULATOR MODAL ─────────── */}
         {showBMI && (
           <div
             className="fixed inset-0 bg-black/50 flex items-center
