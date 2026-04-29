@@ -153,7 +153,7 @@ export default function Contact() {
             rel="noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full transition shadow-lg"
           >
-            💬 Chat on WhatsApp
+             Chat on WhatsApp
           </a>
         </div>
       </section>
@@ -320,7 +320,7 @@ export default function Contact() {
                 rel="noreferrer"
                 className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3.5 rounded-xl transition"
               >
-                💬 Or Chat on WhatsApp Instead
+                Chat on WhatsApp
               </a>
             </form>
           </div>
