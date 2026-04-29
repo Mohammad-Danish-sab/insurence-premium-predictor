@@ -8,7 +8,7 @@ export default function ShareWhatsApp({ result, input }) {
 
   if (!result) return null;
 
-  const PHONE = "919876543210";
+  const PHONE = "919288696822";
 
   const buildMessage = () => {
     return `🛡️ *Insurance Premium Quote — InsurePredict*

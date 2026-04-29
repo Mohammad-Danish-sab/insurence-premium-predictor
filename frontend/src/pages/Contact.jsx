@@ -88,13 +88,13 @@ export default function Contact() {
       value: "+91 98765 43210",
       sub: "24/7 WhatsApp support",
       bg: "bg-green-50",
-      href: "https://wa.me/919876543210",
+      href: "https://wa.me/919288696822",
     },
     {
       icon: <MapPin className="w-6 h-6 text-orange-600" />,
       label: "Visit Us",
       value: "New Delhi, India",
-      sub: "Connaught Place, 110001",
+      sub: "Jamia Nagar Okhla, 110025",
       bg: "bg-orange-50",
       href: "#",
     },
@@ -148,7 +148,7 @@ export default function Contact() {
           </p>
 
           <a
-            href="https://wa.me/919876543210"
+            href="https://wa.me/919288696822"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-full transition shadow-lg"
@@ -315,7 +315,7 @@ export default function Contact() {
               </button>
 
               <a
-                href="https://wa.me/919876543210?text=Hi! I need help with InsurePredict."
+                href="https://wa.me/919288696822?text=Hi! I need help with InsurePredict."
                 target="_blank"
                 rel="noreferrer"
                 className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3.5 rounded-xl transition"

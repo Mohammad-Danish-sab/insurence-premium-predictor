@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import InsuranceHealthScore from "./components/InsuranceHealthScore";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -13,6 +14,7 @@ import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import InsuranceScore from "./pages/InsuranceScore";
 
 export default function App() {
   return (
@@ -25,7 +27,7 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-
+          <Route path="/insurance-score" element={<InsuranceScore />} />
           {/* Protected routes */}
           <Route
             path="/dashboard"
