@@ -15,6 +15,8 @@ import Profile from "./pages/Profile";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import InsuranceScore from "./pages/InsuranceScore";
+import CityComparison from "./pages/CityComparison";
+
 
 export default function App() {
   return (
@@ -28,6 +30,7 @@ export default function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/insurance-score" element={<InsuranceScore />} />
+          <Route path="/city-comparison" element={<CityComparison />} />
           {/* Protected routes */}
           <Route
             path="/dashboard"
