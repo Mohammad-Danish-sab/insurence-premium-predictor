@@ -32,8 +32,8 @@ const CITIES = {
 
 export default function CityComparison() {
   const [form, setForm] = useState({
-    age: "35",
-    bmi: "24",
+    age: "",
+    bmi: "",
     smoker: false,
     insurance_type: "health",
   });

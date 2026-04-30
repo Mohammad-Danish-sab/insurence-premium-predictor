@@ -16,6 +16,7 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import InsuranceScore from "./pages/InsuranceScore";
 import CityComparison from "./pages/CityComparison";
+import FamilyFloater from "./pages/FamilyFloater";
 
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/insurance-score" element={<InsuranceScore />} />
           <Route path="/city-comparison" element={<CityComparison />} />
+          <Route path="/family-floater" element={<FamilyFloater />} />
           {/* Protected routes */}
           <Route
             path="/dashboard"
