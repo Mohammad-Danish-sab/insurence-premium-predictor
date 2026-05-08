@@ -107,15 +107,12 @@ async def get_all_predictions(
 
     filters = {}
 
-    # FILTER: smoker
     if smoker:
         filters["smoker"] = smoker
 
-    # FILTER: region
     if region:
         filters["region"] = region
 
-    # FILTER: premium range
     if min_premium is not None or max_premium is not None:
 
         filters["result.predicted_premium"] = {}
@@ -153,6 +150,43 @@ async def get_all_predictions(
 
         "filters": filters
     }
+
+@router.delete("/predictions/{prediction_id}")
+async def delete_prediction(
+
+    prediction_id: str,
+
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.predictions.delete_one(
+            {
+                "_id": ObjectId(prediction_id)
+            }
+        )
+
+        if result.deleted_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Prediction not found"
+            )
+
+        return {
+            "message": "Prediction deleted successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid prediction ID"
+        )
+    
 
 @router.get("/stats")
 async def admin_stats(_: dict = Depends(admin_required)):
@@ -199,7 +233,6 @@ async def delete_user(
                 detail="User not found"
             )
 
-        # delete user's predictions
         await db.predictions.delete_many({
             "user_id": user_id
         })
