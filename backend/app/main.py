@@ -6,6 +6,7 @@ from slowapi.errors import RateLimitExceeded
 from contextlib import asynccontextmanager
 from app.config import settings
 from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
+from app.routes.admin import router as admin_router
 
 
 @asynccontextmanager

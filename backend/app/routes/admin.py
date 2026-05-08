@@ -1,21 +1,78 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from app.middleware.auth_middleware import get_current_user, require_admin
+from app.middleware.auth_middleware import  admin_required
 from app.database import get_db
 from bson import ObjectId
 
 router = APIRouter()
 
+@router.get("/dashboard")
+async def admin_dashboard(
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    total_users = await db.users.count_documents({})
+
+    total_predictions = await db.predictions.count_documents({})
+
+    total_blogs = await db.blogs.count_documents({})
+
+    total_contacts = await db.contacts.count_documents({})
+
+    recent_users_cursor = db.users.find(
+        {},
+        {
+            "hashed_password": 0
+        }
+    ).sort("_id", -1).limit(5)
+
+    recent_users = []
+
+    async for user in recent_users_cursor:
+        user["_id"] = str(user["_id"])
+        recent_users.append(user)
+
+    recent_predictions_cursor = db.predictions.find().sort(
+        "_id",
+        -1
+    ).limit(5)
+
+    recent_predictions = []
+
+    async for prediction in recent_predictions_cursor:
+        prediction["_id"] = str(prediction["_id"])
+        recent_predictions.append(prediction)
+
+    return {
+
+        "analytics": {
+
+            "total_users": total_users,
+
+            "total_predictions": total_predictions,
+
+            "total_blogs": total_blogs,
+
+            "total_contacts": total_contacts
+        },
+
+        "recent_users": recent_users,
+
+        "recent_predictions": recent_predictions
+    }
+
 @router.get("/users")
 async def get_all_users(
     page:  int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
-    _: dict = Depends(require_admin)
+    _: dict = Depends(admin_required)
 ):
     db   = get_db()
     skip = (page - 1) * limit
 
     cursor = db.users.find(
-        {}, {"hashed_password": 0}   # exclude password
+        {}, {"hashed_password": 0}   
     ).skip(skip).limit(limit)
 
     users = []
@@ -24,31 +81,81 @@ async def get_all_users(
         users.append(user)
 
     total = await db.users.count_documents({})
-    return {"users": users, "total": total, "page": page}
+    return {"users": users, "total": total, "page": page, "limit": limit}
 
 @router.get("/predictions")
 async def get_all_predictions(
-    page:  int = Query(default=1, ge=1),
+
+    page: int = Query(default=1, ge=1),
+
     limit: int = Query(default=20, ge=1, le=100),
-    _: dict = Depends(require_admin)
+
+    smoker: str = None,
+
+    region: str = None,
+
+    min_premium: float = None,
+
+    max_premium: float = None,
+
+    _: dict = Depends(admin_required)
 ):
-    db   = get_db()
+
+    db = get_db()
+
     skip = (page - 1) * limit
 
-    cursor = db.predictions.find().sort(
-        "created_at", -1
+    filters = {}
+
+    # FILTER: smoker
+    if smoker:
+        filters["smoker"] = smoker
+
+    # FILTER: region
+    if region:
+        filters["region"] = region
+
+    # FILTER: premium range
+    if min_premium is not None or max_premium is not None:
+
+        filters["result.predicted_premium"] = {}
+
+        if min_premium is not None:
+            filters["result.predicted_premium"]["$gte"] = min_premium
+
+        if max_premium is not None:
+            filters["result.predicted_premium"]["$lte"] = max_premium
+
+    cursor = db.predictions.find(filters).sort(
+        "created_at",
+        -1
     ).skip(skip).limit(limit)
 
     predictions = []
-    async for doc in cursor:
-        doc["_id"] = str(doc["_id"])
-        predictions.append(doc)
 
-    total = await db.predictions.count_documents({})
-    return {"predictions": predictions, "total": total, "page": page}
+    async for prediction in cursor:
+
+        prediction["_id"] = str(prediction["_id"])
+
+        predictions.append(prediction)
+
+    total = await db.predictions.count_documents(filters)
+
+    return {
+
+        "predictions": predictions,
+
+        "total": total,
+
+        "page": page,
+
+        "limit": limit,
+
+        "filters": filters
+    }
 
 @router.get("/stats")
-async def admin_stats(_: dict = Depends(require_admin)):
+async def admin_stats(_: dict = Depends(admin_required)):
     db = get_db()
 
     total_users       = await db.users.count_documents({})
@@ -74,15 +181,114 @@ async def admin_stats(_: dict = Depends(require_admin)):
 @router.delete("/users/{user_id}")
 async def delete_user(
     user_id: str,
-    _: dict = Depends(require_admin)
+    _: dict = Depends(admin_required)
 ):
-    db     = get_db()
-    result = await db.users.delete_one({"_id": ObjectId(user_id)})
 
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
+    db = get_db()
 
-    # also delete their predictions
-    await db.predictions.delete_many({"user_id": user_id})
+    try:
 
-    return {"message": "User and their predictions deleted "}
+        result = await db.users.delete_one({
+            "_id": ObjectId(user_id)
+        })
+
+        if result.deleted_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+        # delete user's predictions
+        await db.predictions.delete_many({
+            "user_id": user_id
+        })
+
+        return {
+            "message": "User and predictions deleted"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid user ID"
+        )
+    
+@router.put("/users/block/{user_id}")
+async def block_user(
+    user_id: str,
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.users.update_one(
+            {
+                "_id": ObjectId(user_id)
+            },
+            {
+                "$set": {
+                    "is_blocked": True
+                }
+            }
+        )
+
+        if result.matched_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+        return {
+            "message": "User blocked successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid user ID"
+        )
+    
+@router.put("/users/unblock/{user_id}")
+async def unblock_user(
+    user_id: str,
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.users.update_one(
+            {
+                "_id": ObjectId(user_id)
+            },
+            {
+                "$set": {
+                    "is_blocked": False
+                }
+            }
+        )
+
+        if result.matched_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+        return {
+            "message": "User unblocked successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid user ID"
+        )
