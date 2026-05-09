@@ -85,3 +85,44 @@ async def get_single_blog(blog_id: str):
             detail="Invalid blog ID"
         )
     
+@router.put("/admin/blogs/{blog_id}")
+async def update_blog(
+
+    blog_id: str,
+
+    updated_blog: BlogCreate,
+
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.blogs.update_one(
+            {
+                "_id": ObjectId(blog_id)
+            },
+            {
+                "$set": updated_blog.dict()
+            }
+        )
+
+        if result.matched_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Blog not found"
+            )
+
+        return {
+            "message": "Blog updated successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid blog ID"
+        )
+    
