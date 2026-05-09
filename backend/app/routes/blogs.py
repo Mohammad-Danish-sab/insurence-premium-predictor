@@ -125,4 +125,39 @@ async def update_blog(
             status_code=400,
             detail="Invalid blog ID"
         )
-    
+
+@router.delete("/admin/blogs/{blog_id}")
+async def delete_blog(
+
+    blog_id: str,
+
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.blogs.delete_one(
+            {
+                "_id": ObjectId(blog_id)
+            }
+        )
+
+        if result.deleted_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Blog not found"
+            )
+
+        return {
+            "message": "Blog deleted successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid blog ID"
+        )  

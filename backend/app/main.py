@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from app.config import settings
 from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
 from app.routes.admin import router as admin_router
+from app.routes.blogs import router as blog_router
 
 
 @asynccontextmanager
@@ -56,6 +57,7 @@ app.include_router(auth.router,    prefix="/api/auth",    tags=["Auth"])
 app.include_router(predict.router, prefix="/api/predict", tags=["Prediction"])
 app.include_router(history.router, prefix="/api/history", tags=["History"])
 app.include_router(admin.router,   prefix="/api/admin",   tags=["Admin"])
+app.include_router(blog_router, prefix="/api", tags=["Blogs"])
 
 @app.get("/", tags=[" Root"])
 async def root():
