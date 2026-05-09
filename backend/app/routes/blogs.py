@@ -32,6 +32,28 @@ async def create_blog(
         "blog_id": str(result.inserted_id)
     }
 
+@router.get("/blogs")
+async def get_all_blogs():
+
+    db = get_db()
+
+    cursor = db.blogs.find().sort(
+        "created_at",
+        -1
+    )
+
+    blogs = []
+
+    async for blog in cursor:
+
+        blog["_id"] = str(blog["_id"])
+
+        blogs.append(blog)
+
+    return {
+        "blogs": blogs
+    }
+
 @router.get("/blogs/{blog_id}")
 async def get_single_blog(blog_id: str):
 
