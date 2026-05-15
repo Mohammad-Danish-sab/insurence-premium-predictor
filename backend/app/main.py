@@ -9,6 +9,7 @@ from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
 from app.routes.admin import router as admin_router
 from app.routes.blogs import router as blog_router
 from app.routes.contacts import router as contact_router
+from app.routes.activity_logs import router as activity_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -59,6 +60,7 @@ app.include_router(history.router, prefix="/api/history", tags=["History"])
 app.include_router(admin.router,   prefix="/api/admin",   tags=["Admin"])
 app.include_router(blog_router, prefix="/api", tags=["Blogs"])
 app.include_router(contact_router, prefix="/api", tags=["Contacts"])
+app.include_router(activity_router, prefix="/api", tags=["Activity Logs"])
 
 @app.get("/", tags=[" Root"])
 async def root():
