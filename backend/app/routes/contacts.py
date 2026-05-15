@@ -54,3 +54,44 @@ async def get_all_contacts(
     return {
         "contacts": contacts
     }
+
+@router.put("/admin/contacts/{contact_id}")
+async def mark_contact_resolved(
+
+    contact_id: str,
+
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.contacts.update_one(
+            {
+                "_id": ObjectId(contact_id)
+            },
+            {
+                "$set": {
+                    "status": "resolved"
+                }
+            }
+        )
+
+        if result.matched_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Contact not found"
+            )
+
+        return {
+            "message": "Contact marked resolved"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid contact ID"
+        )
