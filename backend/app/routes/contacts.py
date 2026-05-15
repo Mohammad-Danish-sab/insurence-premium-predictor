@@ -30,3 +30,27 @@ async def create_contact_message(
 
         "contact_id": str(result.inserted_id)
     }
+
+@router.get("/admin/contacts")
+async def get_all_contacts(
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    cursor = db.contacts.find().sort(
+        "created_at",
+        -1
+    )
+
+    contacts = []
+
+    async for contact in cursor:
+
+        contact["_id"] = str(contact["_id"])
+
+        contacts.append(contact)
+
+    return {
+        "contacts": contacts
+    }
