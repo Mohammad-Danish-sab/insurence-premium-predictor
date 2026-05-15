@@ -8,7 +8,7 @@ from app.config import settings
 from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
 from app.routes.admin import router as admin_router
 from app.routes.blogs import router as blog_router
-
+from app.routes.contacts import router as contact_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -58,6 +58,7 @@ app.include_router(predict.router, prefix="/api/predict", tags=["Prediction"])
 app.include_router(history.router, prefix="/api/history", tags=["History"])
 app.include_router(admin.router,   prefix="/api/admin",   tags=["Admin"])
 app.include_router(blog_router, prefix="/api", tags=["Blogs"])
+app.include_router(contact_router, prefix="/api", tags=["Contacts"])
 
 @app.get("/", tags=[" Root"])
 async def root():
