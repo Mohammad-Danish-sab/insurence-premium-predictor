@@ -95,3 +95,40 @@ async def mark_contact_resolved(
             status_code=400,
             detail="Invalid contact ID"
         )
+    
+
+@router.delete("/admin/contacts/{contact_id}")
+async def delete_contact(
+
+    contact_id: str,
+
+    _: dict = Depends(admin_required)
+):
+
+    db = get_db()
+
+    try:
+
+        result = await db.contacts.delete_one(
+            {
+                "_id": ObjectId(contact_id)
+            }
+        )
+
+        if result.deleted_count == 0:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Contact not found"
+            )
+
+        return {
+            "message": "Contact deleted successfully"
+        }
+
+    except Exception:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid contact ID"
+        )
