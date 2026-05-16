@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from app.middleware.auth_middleware import  admin_required
+from app.middleware.auth_middleware import require_admin
 from app.database import get_db
 from bson import ObjectId
 
@@ -7,7 +7,7 @@ router = APIRouter()
 
 @router.get("/dashboard")
 async def admin_dashboard(
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
@@ -66,7 +66,7 @@ async def admin_dashboard(
 async def get_all_users(
     page:  int = Query(default=1, ge=1),
     limit: int = Query(default=20, ge=1, le=100),
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
     db   = get_db()
     skip = (page - 1) * limit
@@ -98,7 +98,7 @@ async def get_all_predictions(
 
     max_premium: float = None,
 
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
@@ -156,7 +156,7 @@ async def delete_prediction(
 
     prediction_id: str,
 
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
@@ -189,7 +189,7 @@ async def delete_prediction(
     
 
 @router.get("/stats")
-async def admin_stats(_: dict = Depends(admin_required)):
+async def admin_stats(_: dict = Depends(require_admin)):
     db = get_db()
 
     total_users       = await db.users.count_documents({})
@@ -215,7 +215,7 @@ async def admin_stats(_: dict = Depends(admin_required)):
 @router.delete("/users/{user_id}")
 async def delete_user(
     user_id: str,
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
@@ -251,7 +251,7 @@ async def delete_user(
 @router.put("/users/block/{user_id}")
 async def block_user(
     user_id: str,
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
@@ -290,7 +290,7 @@ async def block_user(
 @router.put("/users/unblock/{user_id}")
 async def unblock_user(
     user_id: str,
-    _: dict = Depends(admin_required)
+    _: dict = Depends(require_admin)
 ):
 
     db = get_db()
