@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import { AuthProvider } from "./context/AuthContext";
+
 import ProtectedRoute from "./components/ProtectedRoute";
-import InsuranceHealthScore from "./components/InsuranceHealthScore";
+
+import AdminProtectedRoute from "./admin/routes/AdminProtectedRoute";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -10,7 +13,6 @@ import Dashboard from "./pages/Dashboard";
 import Predict from "./pages/Predict";
 import History from "./pages/History";
 import Report from "./pages/Report";
-import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
@@ -18,22 +20,40 @@ import InsuranceScore from "./pages/InsuranceScore";
 import CityComparison from "./pages/CityComparison";
 import FamilyFloater from "./pages/FamilyFloater";
 
+import AdminLogin from "./admin/pages/AdminLogin";
+import AdminDashboard from "./admin/pages/Dashboard";
+import Users from "./admin/pages/Users";
+import Predictions from "./admin/pages/Predictions";
+import Blogs from "./admin/pages/Blogs";
+import Contacts from "./admin/pages/Contacts";
+import ActivityLogs from "./admin/pages/ActivityLogs";
+import ModelMonitor from "./admin/pages/ModelMonitor";
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
+         
+
           <Route path="/" element={<Home />} />
+
           <Route path="/login" element={<Login />} />
+
           <Route path="/signup" element={<Signup />} />
+
           <Route path="/faq" element={<FAQ />} />
+
           <Route path="/contact" element={<Contact />} />
+
           <Route path="/insurance-score" element={<InsuranceScore />} />
+
           <Route path="/city-comparison" element={<CityComparison />} />
+
           <Route path="/family-floater" element={<FamilyFloater />} />
-          {/* Protected routes */}
+
+          
+
           <Route
             path="/dashboard"
             element={
@@ -42,6 +62,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/predict"
             element={
@@ -50,6 +71,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/history"
             element={
@@ -58,6 +80,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/report/:id"
             element={
@@ -67,15 +90,6 @@ export default function App() {
             }
           />
 
-          {/* Admin only */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly>
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="/profile"
             element={
@@ -85,11 +99,79 @@ export default function App() {
             }
           />
 
-          {/* 404 */}
+        
+
+          <Route path="/admin/login" element={<AdminLogin />} />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users"
+            element={
+              <AdminProtectedRoute>
+                <Users />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/predictions"
+            element={
+              <AdminProtectedRoute>
+                <Predictions />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/blogs"
+            element={
+              <AdminProtectedRoute>
+                <Blogs />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/contacts"
+            element={
+              <AdminProtectedRoute>
+                <Contacts />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/activity-logs"
+            element={
+              <AdminProtectedRoute>
+                <ActivityLogs />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/model-monitor"
+            element={
+              <AdminProtectedRoute>
+                <ModelMonitor />
+              </AdminProtectedRoute>
+            }
+          />
+
+         
+
           <Route
             path="*"
             element={
-              <div className="flex items-center justify-center h-screen text-2xl font-bold text-gray-500">
+              <div className="flex items-center justify-center h-screen text-3xl font-bold text-gray-500">
                 404 — Page Not Found
               </div>
             }
