@@ -28,14 +28,14 @@ import Blogs from "./admin/pages/Blogs";
 import Contacts from "./admin/pages/Contacts";
 import ActivityLogs from "./admin/pages/ActivityLogs";
 import ModelMonitor from "./admin/pages/ModelMonitor";
+import AdminSignup from "./admin/pages/AdminSignup";
+import Analytics from "./admin/pages/Analytics";
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-         
-
           <Route path="/" element={<Home />} />
 
           <Route path="/login" element={<Login />} />
@@ -51,8 +51,6 @@ export default function App() {
           <Route path="/city-comparison" element={<CityComparison />} />
 
           <Route path="/family-floater" element={<FamilyFloater />} />
-
-          
 
           <Route
             path="/dashboard"
@@ -98,8 +96,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-        
 
           <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -165,8 +161,16 @@ export default function App() {
               </AdminProtectedRoute>
             }
           />
+          <Route
+            path="/admin/analytics"
+            element={
+              <AdminProtectedRoute>
+                <Analytics />
+              </AdminProtectedRoute>
+            }
+          />
 
-         
+          <Route path="/admin/signup" element={<AdminSignup />} />
 
           <Route
             path="*"

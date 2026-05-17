@@ -1,98 +1,141 @@
+import { Link, useLocation } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Users,
   FileText,
-  ClipboardList,
-  MessageSquare,
+  BarChart2,
   Activity,
-  BarChart3,
-  LogOut,
+  Shield,
+  Mail,
+  BookOpen,
+  Cpu,
 } from "lucide-react";
 
-import { Link, useNavigate } from "react-router-dom";
+export default function AdminSidebar() {
+  const location = useLocation();
 
-function AdminSidebar() {
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem("token");
-
-    localStorage.removeItem("role");
-
-    navigate("/admin/login");
-  };
-
-  const menuItems = [
+  const menus = [
     {
       name: "Dashboard",
-      icon: <LayoutDashboard size={20} />,
+      icon: <LayoutDashboard className="w-5 h-5" />,
       path: "/admin/dashboard",
     },
 
     {
       name: "Users",
-      icon: <Users size={20} />,
+      icon: <Users className="w-5 h-5" />,
       path: "/admin/users",
     },
 
     {
       name: "Predictions",
-      icon: <ClipboardList size={20} />,
+      icon: <FileText className="w-5 h-5" />,
       path: "/admin/predictions",
     },
 
     {
-      name: "Blogs",
-      icon: <FileText size={20} />,
-      path: "/admin/blogs",
-    },
-
-    {
-      name: "Contacts",
-      icon: <MessageSquare size={20} />,
-      path: "/admin/contacts",
+      name: "Analytics",
+      icon: <BarChart2 className="w-5 h-5" />,
+      path: "/admin/analytics",
     },
 
     {
       name: "Activity Logs",
-      icon: <Activity size={20} />,
+      icon: <Activity className="w-5 h-5" />,
       path: "/admin/activity-logs",
     },
 
     {
+      name: "Contacts",
+      icon: <Mail className="w-5 h-5" />,
+      path: "/admin/contacts",
+    },
+
+    {
+      name: "Blogs",
+      icon: <BookOpen className="w-5 h-5" />,
+      path: "/admin/blogs",
+    },
+
+    {
       name: "Model Monitor",
-      icon: <BarChart3 size={20} />,
+      icon: <Cpu className="w-5 h-5" />,
       path: "/admin/model-monitor",
     },
   ];
 
   return (
-    <div className="w-64 bg-black text-white min-h-screen p-5">
-      <h1 className="text-2xl font-bold mb-10">Admin Panel</h1>
+    <div
+      className="
+      w-72
+      min-h-screen
+      bg-gradient-to-b
+      from-[#1E3A5F]
+      via-[#2E86AB]
+      to-[#1E3A5F]
+      text-white
+      p-6
+      shadow-2xl
+    "
+    >
+      {/* Logo */}
+      <div className="flex items-center gap-3 mb-10">
+        <div
+          className="
+          w-12 h-12 rounded-2xl
+          bg-white/10
+          flex items-center justify-center
+          backdrop-blur
+        "
+        >
+          <Shield className="w-7 h-7 text-[#F4A261]" />
+        </div>
 
-      <div className="space-y-3">
-        {menuItems.map((item, index) => (
-          <Link
-            key={index}
-            to={item.path}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition"
-          >
-            {item.icon}
+        <div>
+          <h1 className="text-2xl font-bold">
+            Admin<span className="text-[#F4A261]">Panel</span>
+          </h1>
 
-            <span>{item.name}</span>
-          </Link>
-        ))}
+          <p className="text-sm text-blue-100">Insurance Dashboard</p>
+        </div>
       </div>
 
-      <button
-        onClick={logout}
-        className="mt-10 flex items-center gap-3 p-3 rounded-lg bg-red-600 hover:bg-red-700 w-full"
-      >
-        <LogOut size={20} />
-        Logout
-      </button>
+      {/* Menu */}
+      <div className="space-y-3">
+        {menus.map((item, i) => {
+          const active = location.pathname === item.path;
+
+          return (
+            <Link
+              key={i}
+              to={item.path}
+              className={`
+                flex items-center gap-3
+                px-4 py-3 rounded-2xl
+                transition-all duration-200
+                group
+                ${
+                  active
+                    ? "bg-white text-[#1E3A5F] shadow-lg"
+                    : "hover:bg-white/10 text-white"
+                }
+              `}
+            >
+              <div
+                className={`
+                  transition
+                  ${active ? "scale-110" : "group-hover:scale-105"}
+                `}
+              >
+                {item.icon}
+              </div>
+
+              <span className="font-medium">{item.name}</span>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
-
-export default AdminSidebar;
