@@ -1,24 +1,21 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
 
-# Request model
 class BlogCreate(BaseModel):
     title: str
+    description: str
     content: str
-    author: str
-    image: Optional[str] = ""
+    image: Optional[str] = None
 
 
-# Response model
-class BlogResponse(BaseModel):
-    id: Optional[str] = Field(alias="_id")
-    title: str
-    content: str
-    author: str
-    image: Optional[str] = ""
-    created_at: datetime
-
-    class Config:
-        populate_by_name = True
+def blog_structure(blog: BlogCreate):
+    return {
+        "title": blog.title,
+        "description": blog.description,
+        "content": blog.content,
+        "image": blog.image,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }

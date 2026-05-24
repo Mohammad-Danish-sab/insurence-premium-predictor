@@ -29,31 +29,42 @@ function AdminLogin() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setError("");
+  setError("");
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const response = await API.post(
-        "/auth/login",
+    const response = await API.post("/api/auth/login", formData);
 
-        formData,
-      );
+    console.log(response.data);
 
-      localStorage.setItem("token", response.data.access_token);
+    // SAVE TOKEN
+    localStorage.setItem("token", response.data.access_token);
 
-      localStorage.setItem("role", "admin");
+    // SAVE USER
+    localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      navigate("/admin/dashboard");
-    } catch (error) {
-      setError(error.response?.data?.detail || "Admin login failed");
-    } finally {
-      setLoading(false);
+    // SAVE ROLE
+    localStorage.setItem("role", response.data.user.role);
+
+    // CHECK ADMIN
+    if (response.data.user.role !== "admin") {
+      setError("Access denied. Admin only.");
+      return;
     }
-  };
+
+    navigate("/admin/dashboard");
+  } catch (error) {
+    console.log(error);
+
+    setError(error.response?.data?.detail || "Admin login failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex">

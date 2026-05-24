@@ -1,24 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException
 from bson import ObjectId
 from bson.errors import InvalidId
+from datetime import datetime
 
 from app.database import get_db
 from app.middleware.admin_middleware import admin_required
 
-from app.models.blog_model import BlogCreate
-from app.schemas.blog_schema import blog_structure
+from app.models.blog_model import BlogCreate, blog_structure
+
+from app.utils.activity_logger import create_activity_log
 
 
 router = APIRouter(
-    prefix="/blogs",
+    prefix="/api/blogs",
     tags=["Blogs"]
 )
-
 
 @router.post("/admin")
 async def create_blog(
     blog: BlogCreate,
-    _: dict = Depends(admin_required)
+    admin: dict = Depends(admin_required)
 ):
 
     db = get_db()
@@ -27,11 +28,15 @@ async def create_blog(
 
     result = await db.blogs.insert_one(new_blog)
 
+    await create_activity_log(
+        action="Created Blog",
+        admin_email=admin["email"]
+    )
+
     return {
         "message": "Blog created successfully",
         "blog_id": str(result.inserted_id)
     }
-
 
 @router.get("/")
 async def get_all_blogs():
@@ -40,7 +45,10 @@ async def get_all_blogs():
 
     blogs = []
 
-    cursor = db.blogs.find().sort("created_at", -1)
+    cursor = db.blogs.find().sort(
+        "created_at",
+        -1
+    )
 
     async for blog in cursor:
 
@@ -91,7 +99,7 @@ async def get_single_blog(blog_id: str):
 async def update_blog(
     blog_id: str,
     updated_blog: BlogCreate,
-    _: dict = Depends(admin_required)
+    admin: dict = Depends(admin_required)
 ):
 
     db = get_db()
@@ -107,12 +115,18 @@ async def update_blog(
             detail="Invalid blog ID"
         )
 
+    update_data = updated_blog.dict(
+        exclude_none=True
+    )
+
+    update_data["updated_at"] = datetime.utcnow()
+
     result = await db.blogs.update_one(
         {
             "_id": object_id
         },
         {
-            "$set": updated_blog.dict(exclude_none=True)
+            "$set": update_data
         }
     )
 
@@ -123,6 +137,11 @@ async def update_blog(
             detail="Blog not found"
         )
 
+    await create_activity_log(
+        action="Updated Blog",
+        admin_email=admin["email"]
+    )
+
     return {
         "message": "Blog updated successfully"
     }
@@ -131,7 +150,7 @@ async def update_blog(
 @router.delete("/admin/{blog_id}")
 async def delete_blog(
     blog_id: str,
-    _: dict = Depends(admin_required)
+    admin: dict = Depends(admin_required)
 ):
 
     db = get_db()
@@ -159,6 +178,11 @@ async def delete_blog(
             status_code=404,
             detail="Blog not found"
         )
+
+    await create_activity_log(
+        action="Deleted Blog",
+        admin_email=admin["email"]
+    )
 
     return {
         "message": "Blog deleted successfully"

@@ -3,6 +3,8 @@ from jose import jwt
 from datetime import datetime, timedelta
 from bson import ObjectId
 
+from app.utils.activity_logger import create_activity_log
+
 from app.models.user import (
     UserSignup,
     UserLogin,
@@ -44,6 +46,7 @@ def verify_password(
 # =========================
 
 def create_access_token(data: dict):
+
     payload = data.copy()
 
     expire = datetime.utcnow() + timedelta(
@@ -68,6 +71,7 @@ def create_access_token(data: dict):
 # =========================
 
 def format_user(user):
+
     return {
         "id": str(user["_id"]),
         "full_name": user.get("full_name"),
@@ -75,7 +79,9 @@ def format_user(user):
         "phone": user.get("phone"),
         "role": user.get("role", "user"),
         "avatar_url": user.get("avatar_url"),
-        "created_at": user.get("created_at")
+        "created_at": user.get("created_at"),
+        "last_login": user.get("last_login"),
+        "is_active": user.get("is_active", True)
     }
 
 
@@ -84,6 +90,7 @@ def format_user(user):
 # =========================
 
 async def create_user(user: UserSignup):
+
     db = get_db()
 
     existing_user = await db.users.find_one({
@@ -99,9 +106,11 @@ async def create_user(user: UserSignup):
         "phone": user.phone,
         "hashed_password": hash_password(user.password),
         "role": getattr(user, "role", "user"),
+        "avatar_url": "",
         "is_active": True,
         "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "updated_at": datetime.utcnow(),
+        "last_login": None
     }
 
     result = await db.users.insert_one(user_data)
@@ -114,6 +123,15 @@ async def create_user(user: UserSignup):
         "sub": str(result.inserted_id),
         "role": inserted_user["role"]
     })
+
+    # =========================
+    # ACTIVITY LOG
+    # =========================
+    await create_activity_log(
+        action="New User Registered",
+        user_email=inserted_user["email"],
+        role=inserted_user["role"]
+    )
 
     return {
         "message": "User registered successfully",
@@ -129,23 +147,21 @@ async def create_user(user: UserSignup):
 # =========================
 
 async def login_user(user: UserLogin):
+
     db = get_db()
 
     db_user = await db.users.find_one({
         "email": user.email
     })
 
-    # USER NOT FOUND
     if not db_user:
         return None
 
-    # PASSWORD FIELD MISSING
     if "hashed_password" not in db_user:
         raise ValueError(
             "Password not found for this account"
         )
 
-    # VERIFY PASSWORD
     valid_password = verify_password(
         user.password,
         db_user["hashed_password"]
@@ -154,13 +170,12 @@ async def login_user(user: UserLogin):
     if not valid_password:
         return None
 
-    # CHECK ACTIVE
     if not db_user.get("is_active", True):
         raise ValueError(
             "Account is deactivated"
         )
 
-    # UPDATE LAST LOGIN
+    # Update last login
     await db.users.update_one(
         {"_id": db_user["_id"]},
         {
@@ -175,6 +190,15 @@ async def login_user(user: UserLogin):
         "role": db_user.get("role", "user")
     })
 
+    # =========================
+    # ACTIVITY LOG
+    # =========================
+    await create_activity_log(
+        action="User Logged In",
+        user_email=db_user["email"],
+        role=db_user.get("role", "user")
+    )
+
     return {
         "message": "Login successful",
         "access_token": token,
@@ -185,10 +209,11 @@ async def login_user(user: UserLogin):
 
 
 # =========================
-# GET USER
+# GET USER BY ID
 # =========================
 
 async def get_user_by_id(user_id: str):
+
     db = get_db()
 
     user = await db.users.find_one({
@@ -209,6 +234,7 @@ async def update_profile(
     user_id: str,
     data: UserUpdateProfile
 ):
+
     db = get_db()
 
     update_fields = {
@@ -218,11 +244,25 @@ async def update_profile(
     }
 
     if update_fields:
+
         update_fields["updated_at"] = datetime.utcnow()
 
         await db.users.update_one(
             {"_id": ObjectId(user_id)},
             {"$set": update_fields}
+        )
+
+        user = await db.users.find_one({
+            "_id": ObjectId(user_id)
+        })
+
+        # =========================
+        # ACTIVITY LOG
+        # =========================
+        await create_activity_log(
+            action="Profile Updated",
+            user_email=user["email"],
+            role=user.get("role", "user")
         )
 
     updated_user = await db.users.find_one({
@@ -240,6 +280,7 @@ async def change_password(
     user_id: str,
     data: ChangePassword
 ):
+
     db = get_db()
 
     user = await db.users.find_one({
@@ -273,6 +314,15 @@ async def change_password(
         }
     )
 
+    # =========================
+    # ACTIVITY LOG
+    # =========================
+    await create_activity_log(
+        action="Password Changed",
+        user_email=user["email"],
+        role=user.get("role", "user")
+    )
+
 
 # =========================
 # GET ALL USERS
@@ -282,6 +332,7 @@ async def get_all_users(
     skip: int = 0,
     limit: int = 20
 ):
+
     db = get_db()
 
     cursor = db.users.find(

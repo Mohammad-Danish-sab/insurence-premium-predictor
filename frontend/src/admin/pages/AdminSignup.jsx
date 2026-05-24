@@ -33,16 +33,34 @@ export default function AdminSignup() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  try {
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/admin/login");
-    }, 1500);
-  };
+    const payload = {
+      ...form,
+      role: "admin", // important
+    };
+
+    const response = await API.post("/auth/signup", payload);
+
+    // save token
+    localStorage.setItem("token", response.data.access_token);
+
+    localStorage.setItem("role", response.data.user.role);
+
+    // redirect
+    navigate("/admin/dashboard");
+  } catch (error) {
+    console.log(error);
+
+    alert(error.response?.data?.detail || "Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const perks = [
     "Manage users",
@@ -55,7 +73,7 @@ export default function AdminSignup() {
     <div className="min-h-screen flex bg-gray-50">
       {/* LEFT */}
       <div
-        className="hidden lg:flex lg:w-1/2 bg-gradient-to-br
+        className="hidden lg:flex lg:w-1/2 bg-linear-to-br
         from-[#1E3A5F] via-[#2E86AB] to-[#1E3A5F]
         relative overflow-hidden items-center justify-center p-12"
       >
