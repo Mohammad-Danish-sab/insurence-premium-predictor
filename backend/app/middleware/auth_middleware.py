@@ -1,20 +1,27 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from app.config import settings
 from app.database import get_db
 
 
-# OAuth2 scheme
+# =========================
+# OAuth2 Scheme
+# =========================
+
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/auth/login"
 )
 
 
-# Decode JWT token
-def decode_token(token: str) -> dict:
+# =========================
+# Decode JWT Token
+# =========================
+
+def decode_token(token: str):
 
     try:
 
@@ -25,15 +32,16 @@ def decode_token(token: str) -> dict:
         )
 
         user_id = payload.get("sub")
-
-        role = payload.get("role")
+        role = payload.get("role", "user")
 
         if not user_id:
 
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token payload",
-                headers={"WWW-Authenticate": "Bearer"}
+                headers={
+                    "WWW-Authenticate": "Bearer"
+                }
             )
 
         return {
@@ -41,32 +49,51 @@ def decode_token(token: str) -> dict:
             "role": role
         }
 
+    except ExpiredSignatureError:
+
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expired",
+            headers={
+                "WWW-Authenticate": "Bearer"
+            }
+        )
+
     except JWTError:
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token expired or invalid",
-            headers={"WWW-Authenticate": "Bearer"}
+            detail="Invalid token",
+            headers={
+                "WWW-Authenticate": "Bearer"
+            }
         )
 
 
-# Get current authenticated user
+# =========================
+# Get Current User
+# =========================
+
 async def get_current_user(
     token: str = Depends(oauth2_scheme)
-) -> dict:
+):
 
-    # Decode token
     token_data = decode_token(token)
 
-    # Get database
     db = get_db()
 
-    # Find user
-    user = await db.users.find_one(
-        {
+    try:
+
+        user = await db.users.find_one({
             "_id": ObjectId(token_data["id"])
-        }
-    )
+        })
+
+    except InvalidId:
+
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid user ID"
+        )
 
     if not user:
 
@@ -75,35 +102,31 @@ async def get_current_user(
             detail="User not found"
         )
 
-    # Check if blocked/deactivated
+    # Check active account
     if not user.get("is_active", True):
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Account is deactivated. Contact support."
+            detail="Account deactivated"
         )
 
-    # Return clean user object
     return {
-
         "id": str(user["_id"]),
-
-        "email": user["email"],
-
-        "full_name": user["full_name"],
-
-        "role": user["role"],
-
+        "email": user.get("email"),
+        "full_name": user.get("full_name"),
+        "role": user.get("role", "user"),
         "phone": user.get("phone"),
-
-        "avatar_url": user.get("avatar_url")
+        "avatar_url": user.get("avatar_url"),
     }
 
 
-# Require admin access
+# =========================
+# Admin Access
+# =========================
+
 async def require_admin(
     current_user: dict = Depends(get_current_user)
-) -> dict:
+):
 
     if current_user["role"] != "admin":
 
@@ -115,22 +138,28 @@ async def require_admin(
     return current_user
 
 
-# Require agent/admin access
+# =========================
+# Agent Access
+# =========================
+
 async def require_agent(
     current_user: dict = Depends(get_current_user)
-) -> dict:
+):
 
     if current_user["role"] not in ["agent", "admin"]:
 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Agent or Admin access required"
+            detail="Agent/Admin access required"
         )
 
     return current_user
 
 
-# Optional authentication
+# =========================
+# Optional Auth
+# =========================
+
 optional_oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/auth/login",
     auto_error=False
@@ -139,7 +168,7 @@ optional_oauth2_scheme = OAuth2PasswordBearer(
 
 async def get_optional_user(
     token: str = Depends(optional_oauth2_scheme)
-) -> dict | None:
+):
 
     if not token:
         return None
@@ -150,26 +179,19 @@ async def get_optional_user(
 
         db = get_db()
 
-        user = await db.users.find_one(
-            {
-                "_id": ObjectId(token_data["id"])
-            }
-        )
+        user = await db.users.find_one({
+            "_id": ObjectId(token_data["id"])
+        })
 
         if not user:
             return None
 
         return {
-
             "id": str(user["_id"]),
-
-            "email": user["email"],
-
-            "full_name": user["full_name"],
-
-            "role": user["role"]
+            "email": user.get("email"),
+            "full_name": user.get("full_name"),
+            "role": user.get("role", "user"),
         }
 
     except Exception:
-
         return None

@@ -1,8 +1,11 @@
-from pydantic import BaseModel
+from datetime import datetime
 
 
-class BlogCreate(BaseModel):
-    title: str
-    content: str
-    image: str
-    author: str
+def blog_structure(data):
+    return {
+        "title": data.title,
+        "content": data.content,
+        "image": data.image,
+        "author": data.author,
+        "created_at": datetime.utcnow(),
+    }

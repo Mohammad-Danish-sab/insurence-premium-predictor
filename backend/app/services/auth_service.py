@@ -2,175 +2,298 @@ from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
 from bson import ObjectId
-from app.models.user import UserSignup, UserLogin, UserUpdateProfile, ChangePassword, UserInDB
+
+from app.models.user import (
+    UserSignup,
+    UserLogin,
+    UserUpdateProfile,
+    ChangePassword,
+    UserInDB
+)
+
 from app.database import get_db
 from app.config import settings
-from fastapi import Depends
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
+
+
+# =========================
+# PASSWORD FUNCTIONS
+# =========================
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+
+def verify_password(
+    plain_password: str,
+    hashed_password: str
+) -> bool:
+    return pwd_context.verify(
+        plain_password,
+        hashed_password
+    )
 
 
-def create_access_token(data: dict) -> str:
+# =========================
+# JWT TOKEN
+# =========================
+
+def create_access_token(data: dict):
     payload = data.copy()
-    expire  = datetime.utcnow() + timedelta(
+
+    expire = datetime.utcnow() + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
-    payload.update({"exp": expire})
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-def _format_user(user: dict) -> dict:
-    user["id"]  = str(user["_id"])
-    user.pop("_id",             None)
-    user.pop("hashed_password", None)
-    return user
+    payload.update({
+        "exp": expire
+    })
 
-
-async def create_user(user: UserSignup) -> dict:
-    db= get_db()
-
-    # Check duplicate email
-    existing = await db.users.find_one({"email": user.email})
-    if existing:
-        raise ValueError("Email already registered")
-
-    # Build DB document
-    user_doc = UserInDB(
-        full_name=user.full_name,
-        email=user.email,
-        hashed_password=hash_password(user.password),
-        phone=user.phone,
-        role=user.role
+    token = jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
     )
 
-    result = await db.users.insert_one(user_doc.dict())
-    user_id = str(result.inserted_id)
+    return token
 
-    # Generate token
-    token = create_access_token({"sub": user_id, "role": user.role})
 
+# =========================
+# FORMAT USER
+# =========================
+
+def format_user(user):
     return {
-        "message":      "User registered successfully..",
-        "access_token": token,
-        "token_type":   "bearer",
-        "expires_in":   settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        "user": {
-            "id":        user_id,
-            "full_name": user.full_name,
-            "email":     user.email,
-            "phone":     user.phone,
-            "role":      user.role,
-        }
+        "id": str(user["_id"]),
+        "full_name": user.get("full_name"),
+        "email": user.get("email"),
+        "phone": user.get("phone"),
+        "role": user.get("role", "user"),
+        "avatar_url": user.get("avatar_url"),
+        "created_at": user.get("created_at")
     }
 
 
+# =========================
+# CREATE USER
+# =========================
 
-async def login_user(user: UserLogin) -> dict | None:
+async def create_user(user: UserSignup):
     db = get_db()
 
-    db_user = await db.users.find_one({"email": user.email})
+    existing_user = await db.users.find_one({
+        "email": user.email
+    })
+
+    if existing_user:
+        raise ValueError("Email already registered")
+
+    user_data = {
+        "full_name": user.full_name,
+        "email": user.email,
+        "phone": user.phone,
+        "hashed_password": hash_password(user.password),
+        "role": getattr(user, "role", "user"),
+        "is_active": True,
+        "created_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+
+    result = await db.users.insert_one(user_data)
+
+    inserted_user = await db.users.find_one({
+        "_id": result.inserted_id
+    })
+
+    token = create_access_token({
+        "sub": str(result.inserted_id),
+        "role": inserted_user["role"]
+    })
+
+    return {
+        "message": "User registered successfully",
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        "user": format_user(inserted_user)
+    }
+
+
+# =========================
+# LOGIN USER
+# =========================
+
+async def login_user(user: UserLogin):
+    db = get_db()
+
+    db_user = await db.users.find_one({
+        "email": user.email
+    })
+
+    # USER NOT FOUND
     if not db_user:
         return None
 
-    if not verify_password(user.password, db_user["hashed_password"]):
-        return None
+    # PASSWORD FIELD MISSING
+    if "hashed_password" not in db_user:
+        raise ValueError(
+            "Password not found for this account"
+        )
 
-    # Check if account is active
-    if not db_user.get("is_active", True):
-        raise ValueError("Account is deactivated. Contact support.")
-
-    # Update last login
-    await db.users.update_one(
-        {"email": user.email},
-        {"$set": {"last_login": datetime.utcnow()}}
+    # VERIFY PASSWORD
+    valid_password = verify_password(
+        user.password,
+        db_user["hashed_password"]
     )
 
-    user_id = str(db_user["_id"])
-    token   = create_access_token({"sub": user_id, "role": db_user["role"]})
+    if not valid_password:
+        return None
+
+    # CHECK ACTIVE
+    if not db_user.get("is_active", True):
+        raise ValueError(
+            "Account is deactivated"
+        )
+
+    # UPDATE LAST LOGIN
+    await db.users.update_one(
+        {"_id": db_user["_id"]},
+        {
+            "$set": {
+                "last_login": datetime.utcnow()
+            }
+        }
+    )
+
+    token = create_access_token({
+        "sub": str(db_user["_id"]),
+        "role": db_user.get("role", "user")
+    })
 
     return {
-        "message":      "Login successful...",
+        "message": "Login successful",
         "access_token": token,
-        "token_type":   "bearer",
-        "expires_in":   settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        "user": {
-            "id":        user_id,
-            "full_name": db_user["full_name"],
-            "email":     db_user["email"],
-            "phone":     db_user.get("phone"),
-            "role":      db_user["role"],
-            "avatar_url": db_user.get("avatar_url"),
-        }
+        "token_type": "bearer",
+        "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        "user": format_user(db_user)
     }
 
-async def get_user_by_id(user_id: str) -> dict | None:
+
+# =========================
+# GET USER
+# =========================
+
+async def get_user_by_id(user_id: str):
     db = get_db()
 
-    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    user = await db.users.find_one({
+        "_id": ObjectId(user_id)
+    })
+
     if not user:
         return None
 
-    return _format_user(user)
+    return format_user(user)
 
-async def update_profile(user_id: str, data: UserUpdateProfile) -> dict:
+
+# =========================
+# UPDATE PROFILE
+# =========================
+
+async def update_profile(
+    user_id: str,
+    data: UserUpdateProfile
+):
     db = get_db()
 
-    # Only update fields that were actually sent
     update_fields = {
-        k: v for k, v in data.dict().items() if v is not None
+        k: v
+        for k, v in data.dict().items()
+        if v is not None
     }
 
-    if not update_fields:
-        user = await db.users.find_one({"_id": ObjectId(user_id)})
-        return _format_user(user)
-    
-    update_fields["updated_at"] = datetime.utcnow()
+    if update_fields:
+        update_fields["updated_at"] = datetime.utcnow()
 
-    await db.users.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": update_fields}
-    )
+        await db.users.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": update_fields}
+        )
 
-    updated_user = await db.users.find_one({"_id": ObjectId(user_id)})
-    return _format_user(updated_user)
+    updated_user = await db.users.find_one({
+        "_id": ObjectId(user_id)
+    })
+
+    return format_user(updated_user)
 
 
-async def change_password(user_id: str, data: ChangePassword) -> None:
+# =========================
+# CHANGE PASSWORD
+# =========================
+
+async def change_password(
+    user_id: str,
+    data: ChangePassword
+):
     db = get_db()
 
-    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    user = await db.users.find_one({
+        "_id": ObjectId(user_id)
+    })
+
     if not user:
         raise ValueError("User not found")
 
-    # Verify old password
-    if not verify_password(data.old_password, user["hashed_password"]):
-        raise ValueError("Old password is incorrect")
-
-    # Hash and save new password
-    await db.users.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": {
-            "hashed_password": hash_password(data.new_password),
-            "updated_at":      datetime.utcnow()
-        }}
+    valid_password = verify_password(
+        data.old_password,
+        user["hashed_password"]
     )
 
-async def get_all_users(skip: int = 0, limit: int = 20) -> list:
-    db     = get_db()
+    if not valid_password:
+        raise ValueError(
+            "Old password is incorrect"
+        )
+
+    new_hashed_password = hash_password(
+        data.new_password
+    )
+
+    await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {
+            "$set": {
+                "hashed_password": new_hashed_password,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+
+
+# =========================
+# GET ALL USERS
+# =========================
+
+async def get_all_users(
+    skip: int = 0,
+    limit: int = 20
+):
+    db = get_db()
+
     cursor = db.users.find(
-        {}, {"hashed_password": 0}
+        {},
+        {
+            "hashed_password": 0
+        }
     ).skip(skip).limit(limit)
 
     users = []
+
     async for user in cursor:
-        user["id"] = str(user["_id"])
-        user.pop("_id", None)
-        users.append(user)
+        users.append(format_user(user))
 
     return users

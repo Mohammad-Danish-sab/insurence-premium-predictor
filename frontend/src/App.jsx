@@ -30,6 +30,9 @@ import ActivityLogs from "./admin/pages/ActivityLogs";
 import ModelMonitor from "./admin/pages/ModelMonitor";
 import AdminSignup from "./admin/pages/AdminSignup";
 import Analytics from "./admin/pages/Analytics";
+import CreateBlog from "./admin/pages/CreateBlog";
+import EditBlog from "./admin/pages/EditBlog";
+
 
 export default function App() {
   return (
@@ -166,6 +169,23 @@ export default function App() {
             element={
               <AdminProtectedRoute>
                 <Analytics />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/blogs/create"
+            element={
+              <AdminProtectedRoute>
+                <CreateBlog />
+              </AdminProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/blogs/edit/:id"
+            element={
+              <AdminProtectedRoute>
+                <EditBlog />
               </AdminProtectedRoute>
             }
           />

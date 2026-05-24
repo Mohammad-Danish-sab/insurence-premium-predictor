@@ -11,6 +11,7 @@ from app.routes.blogs import router as blog_router
 from app.routes.contacts import router as contact_router
 from app.routes.activity_logs import router as activity_router
 from app.routes.model_monitor import router as monitor_router
+from app.routes.blogs import router as blog_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -63,6 +64,7 @@ app.include_router(blog_router, prefix="/api", tags=["Blogs"])
 app.include_router(contact_router, prefix="/api", tags=["Contacts"])
 app.include_router(activity_router, prefix="/api", tags=["Activity Logs"])
 app.include_router(monitor_router, prefix="/api", tags=["Model Monitor"])
+app.include_router(blog_router)
 
 @app.get("/", tags=[" Root"])
 async def root():
